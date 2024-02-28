@@ -7,8 +7,9 @@ import {
   Box,
   Card,
   Grid,
-  Stack,
+  // Stack,
   Divider,
+  Container,
   // MenuItem,
   TextField,
   Typography,
@@ -16,9 +17,10 @@ import {
 } from '@mui/material';
 
 import Iconify from 'src/components/iconify';
-import UserTable from 'src/components/table/UserTable';
+import PageHeader from 'src/components/pageHeader';
+import UserTable from 'src/components/table/BaseTable';
 
-import { CsvUpload } from '../../components/form/csv-upload';
+import { CsvUpload } from '../../../components/form/csv-upload';
 
 // ----------------------------------------------------------------------
 
@@ -54,7 +56,7 @@ export default function RegisterView() {
 
   const renderForm = (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Box sx={{ flexGrow: 1 }}>
+      <Box sx={{ flexGrow: 1, px: 3, pt: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} lg={6}>
             <TextField
@@ -120,48 +122,42 @@ export default function RegisterView() {
             />
           </Grid>
         </Grid>
+        <LoadingButton
+          fullWidth
+          size="large"
+          type="submit"
+          variant="contained"
+          color="inherit"
+          sx={{ my: 3 }}
+        >
+          Register
+        </LoadingButton>
       </Box>
-
-      <LoadingButton
-        fullWidth
-        size="large"
-        type="submit"
-        variant="contained"
-        color="inherit"
-        sx={{ my: 3 }}
-      >
-        Register
-      </LoadingButton>
     </form>
   );
 
   return (
-    <Stack alignItems="center" justifyContent="center" sx={{ height: 1 }}>
-      <Card
-        sx={{
-          width: 0.75,
-          borderRadius: 0,
-          background: '#F9FAFB',
-          boxShadow: 0,
-        }}
-      >
-        <Typography variant="h4" sx={{ my: 3 }}>
-          Register a new user
-        </Typography>
+    <Container sx={{ mt: 3 }}>
+      <PageHeader title="Users" />
+      <Card>
+        <Typography sx={{ fontWeight: 'bold', p: 3 }}>Add User Form</Typography>
+        <Divider />
         {renderForm}
 
-        <Divider sx={{ my: 3 }}>
+        <Divider>
           <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             OR
           </Typography>
         </Divider>
 
-        {users.length > 0 ? (
-          <UserTable users={users} />
-        ) : (
-          <CsvUpload onInputChange={onInputChange} />
-        )}
+        <Box sx={{ p: 3 }}>
+          {users.length > 0 ? (
+            <UserTable users={users} />
+          ) : (
+            <CsvUpload onInputChange={onInputChange} />
+          )}
+        </Box>
       </Card>
-    </Stack>
+    </Container>
   );
 }

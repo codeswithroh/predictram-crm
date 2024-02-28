@@ -11,7 +11,7 @@ import Iconify from 'src/components/iconify';
 
 // ----------------------------------------------------------------------
 
-export default function UserTableToolbar({ numSelected, filterName, onFilterName }) {
+export default function BaseTableToolbar({ numSelected, filter, onFilter, filterables = [] }) {
   return (
     <Toolbar
       sx={{
@@ -31,9 +31,9 @@ export default function UserTableToolbar({ numSelected, filterName, onFilterName
         </Typography>
       ) : (
         <OutlinedInput
-          value={filterName}
-          onChange={onFilterName}
-          placeholder="Search user..."
+          value={filter}
+          onChange={onFilter}
+          placeholder={`Search using ${filterables?.join(', ')}`}
           startAdornment={
             <InputAdornment position="start">
               <Iconify
@@ -45,16 +45,10 @@ export default function UserTableToolbar({ numSelected, filterName, onFilterName
         />
       )}
 
-      {numSelected > 0 ? (
+      {numSelected > 0 && (
         <Tooltip title="Delete">
           <IconButton>
             <Iconify icon="eva:trash-2-fill" />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <Iconify icon="ic:round-filter-list" />
           </IconButton>
         </Tooltip>
       )}
@@ -62,8 +56,9 @@ export default function UserTableToolbar({ numSelected, filterName, onFilterName
   );
 }
 
-UserTableToolbar.propTypes = {
+BaseTableToolbar.propTypes = {
   numSelected: PropTypes.number,
-  filterName: PropTypes.string,
-  onFilterName: PropTypes.func,
+  filter: PropTypes.string,
+  onFilter: PropTypes.func,
+  filterables: PropTypes.array,
 };

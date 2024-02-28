@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 
-import RegisterView from 'src/sections/register/register-view';
+import RegisterView from 'src/sections/user/form/user-form';
 
 // ----------------------------------------------------------------------
 

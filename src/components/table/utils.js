@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const visuallyHidden = {
   border: 0,
   margin: -1,
@@ -54,3 +56,75 @@ export function applyFilter({ inputData, comparator, filterName }) {
 
   return inputData;
 }
+
+function getPropByString(obj, propString) {
+  // return _.get(obj, propString, "-");
+  if (!propString) return obj;
+
+  // eslint-disable-next-line one-var
+
+  const props = propString.split('.');
+
+  let i = 0;
+  let iLen;
+
+  for (i = 0, iLen = props.length - 1; i < iLen; i += 1) {
+    const prop = props[i];
+
+    const candidate = obj[prop];
+    if (candidate !== undefined) {
+      obj = candidate;
+    } else {
+      break;
+    }
+  }
+  return obj[props[i]];
+}
+
+export function getTableData(tableConfig, tableData) {
+  // const headers = tableConfig?.map((el) => el.label);
+  const accessors = tableConfig?.map(({ accessor }) => accessor);
+
+  const accessRow = (data) =>
+    accessors?.map((el) => {
+      if (typeof el === 'string') return getPropByString(data, el);
+      if (typeof el === 'function') return el(data);
+      return '';
+    });
+
+  const data = tableData?.map((el, idx) => accessRow(el, idx));
+  return data;
+}
+
+export const applyPagination = (items, page, limit) =>
+  items?.slice(page * limit, page * limit + limit);
+
+export const applyFilters = (items, query, properties) =>
+  items?.filter((item) => {
+    let matches = true;
+
+    if (query) {
+      let containsQuery = false;
+
+      properties?.forEach((property) => {
+        const data = _.get(item, property, '');
+
+        const dataLowercase =
+          typeof data === 'string'
+            ? data.toLowerCase()
+            : JSON.stringify(data)
+                ?.replace(/{|}|"|'/g, '')
+                .toLowerCase();
+
+        if (dataLowercase.includes(query.toLowerCase())) {
+          containsQuery = true;
+        }
+      });
+
+      if (!containsQuery) {
+        matches = false;
+      }
+    }
+
+    return matches;
+  });
