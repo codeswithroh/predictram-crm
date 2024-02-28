@@ -27,9 +27,14 @@ const navConfig = [
     path: '/blog',
     icon: icon('ic_blog'),
   },
+  // {
+  //   title: 'login',
+  //   path: '/login',
+  //   icon: icon('ic_lock'),
+  // },
   {
-    title: 'login',
-    path: '/login',
+    title: 'User Registration',
+    path: '/user/add',
     icon: icon('ic_lock'),
   },
   {

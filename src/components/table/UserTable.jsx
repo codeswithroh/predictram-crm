@@ -1,40 +1,32 @@
 import { useState } from 'react';
 
-import { Link } from '@mui/material';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 import Table from '@mui/material/Table';
-import Button from '@mui/material/Button';
-import Container from '@mui/material/Container';
 import TableBody from '@mui/material/TableBody';
 import Typography from '@mui/material/Typography';
 import TableContainer from '@mui/material/TableContainer';
 import TablePagination from '@mui/material/TablePagination';
 
-import { RouterLink } from 'src/routes/components';
-
-import { users } from 'src/_mock/user';
-
-import Iconify from 'src/components/iconify';
 import Scrollbar from 'src/components/scrollbar';
 
-import TableNoData from '../table-no-data';
-import UserTableRow from '../user-table-row';
-import UserTableHead from '../user-table-head';
-import TableEmptyRows from '../table-empty-rows';
-import UserTableToolbar from '../user-table-toolbar';
-import { emptyRows, applyFilter, getComparator } from '../utils';
+import UserTableRow from './user-table-row';
+import UserTableHead from './user-table-head';
+import TableEmptyRows from './table-empty-rows';
+import TableNoData from './error/not-found-view';
+import UserTableToolbar from './user-table-toolbar';
+import { emptyRows, applyFilter, getComparator } from './utils';
 
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function UserTable({ users }) {
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState('asc');
 
   const [selected, setSelected] = useState([]);
 
-  const [orderBy, setOrderBy] = useState('name');
+  const [orderBy, setOrderBy] = useState('firstName');
 
   const [filterName, setFilterName] = useState('');
 
@@ -50,18 +42,18 @@ export default function UserPage() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = users.map((n) => n.name);
+      const newSelecteds = users.map((n) => n.firstName);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
-    const selectedIndex = selected.indexOf(name);
+  const handleClick = (event, firstName) => {
+    const selectedIndex = selected.indexOf(firstName);
     let newSelected = [];
     if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, name);
+      newSelected = newSelected.concat(selected, firstName);
     } else if (selectedIndex === 0) {
       newSelected = newSelected.concat(selected.slice(1));
     } else if (selectedIndex === selected.length - 1) {
@@ -89,8 +81,6 @@ export default function UserPage() {
     setFilterName(event.target.value);
   };
 
-  console.log(users);
-
   const dataFiltered = applyFilter({
     inputData: users,
     comparator: getComparator(order, orderBy),
@@ -100,14 +90,9 @@ export default function UserPage() {
   const notFound = !dataFiltered.length && !!filterName;
 
   return (
-    <Container>
+    <>
       <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
         <Typography variant="h4">Users</Typography>
-        <Link component={RouterLink} href="/user/add">
-          <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New User
-          </Button>
-        </Link>
       </Stack>
 
       <Card>
@@ -128,11 +113,10 @@ export default function UserPage() {
                 onRequestSort={handleSort}
                 onSelectAllClick={handleSelectAllClick}
                 headLabel={[
-                  { id: 'name', label: 'Name' },
-                  { id: 'company', label: 'Company' },
-                  { id: 'role', label: 'Role' },
-                  { id: 'isVerified', label: 'Verified', align: 'center' },
-                  { id: 'status', label: 'Status' },
+                  { id: 'firstName', label: 'First Name', align: 'center' },
+                  { id: 'lastName', label: 'Last Name', align: 'center' },
+                  { id: 'phone', label: 'Phone', align: 'center' },
+                  { id: 'email', label: 'Email', align: 'center' },
                   { id: '' },
                 ]}
               />
@@ -142,14 +126,11 @@ export default function UserPage() {
                   .map((row) => (
                     <UserTableRow
                       key={row.id}
-                      name={row.name}
-                      role={row.role}
-                      status={row.status}
-                      company={row.company}
-                      avatarUrl={row.avatarUrl}
-                      isVerified={row.isVerified}
-                      selected={selected.indexOf(row.name) !== -1}
-                      handleClick={(event) => handleClick(event, row.name)}
+                      firstName={row.firstName}
+                      lastName={row.lastName}
+                      phone={row.phone}
+                      email={row.email}
+                      handleClick={(event) => handleClick(event, row.firstName)}
                     />
                   ))}
 
@@ -174,6 +155,6 @@ export default function UserPage() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
-    </Container>
+    </>
   );
 }
