@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { LoginView } from 'src/sections/login';
+import RegisterView from 'src/sections/user/form/user-form';
 
 // ----------------------------------------------------------------------
 
-export default function LoginPage() {
+export default function UserFormPage() {
   return (
     <>
       <Helmet>
-        <title> Login | Minimal UI </title>
+        <title> User Form </title>
       </Helmet>
 
-      <LoginView />
+      <RegisterView />
     </>
   );
 }
