@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import { useSelector } from 'react-redux';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
@@ -13,9 +14,9 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 // ----------------------------------------------------------------------
 
-const auth = true;
-
 export default function Router() {
+  const auth = useSelector((state) => state?.user?.auth);
+
   const routes = useRoutes([
     {
       element: auth ? (
@@ -40,7 +41,7 @@ export default function Router() {
     },
     {
       path: 'login',
-      element: <LoginPage />,
+      element: !auth ? <LoginPage /> : <Navigate to="/" />,
     },
     {
       path: '404',

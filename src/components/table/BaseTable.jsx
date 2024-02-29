@@ -54,21 +54,10 @@ export default function BaseTable({ tableData, tableDataFormat, filterables, act
   return (
     <Card>
       <BaseTableToolbar filter={query} onFilter={handleFilter} filterables={filterables} />
-
       <Scrollbar>
         <TableContainer sx={{ overflow: 'unset' }}>
           <Table sx={{ minWidth: 800 }}>
-            <BaseTableHead
-              // headLabel={[
-              //   { id: 'firstName', label: 'First Name', align: 'center' },
-              //   { id: 'lastName', label: 'Last Name', align: 'center' },
-              //   { id: 'phone', label: 'Phone', align: 'center' },
-              //   { id: 'email', label: 'Email', align: 'center' },
-              //   { id: '' },
-              // ]}
-              actions={actions}
-              headLabel={tableDataFormat}
-            />
+            <BaseTableHead actions={actions} headLabel={tableDataFormat} />
             <TableBody>
               {displayData.map((row) => (
                 <BaseTableRow
@@ -78,17 +67,11 @@ export default function BaseTable({ tableData, tableDataFormat, filterables, act
                 />
               ))}
 
-              {/* <TableEmptyRows
-                height={77}
-                emptyRows={emptyRows(page, rowsPerPage, tableData.length)}
-              /> */}
-
               {notFound && <TableNoData query={query} />}
             </TableBody>
           </Table>
         </TableContainer>
       </Scrollbar>
-
       <TablePagination
         page={page}
         component="div"
@@ -101,14 +84,3 @@ export default function BaseTable({ tableData, tableDataFormat, filterables, act
     </Card>
   );
 }
-
-/*
-{
-    "id": "3174bd52-b35b-4a8d-b4df-464ec776c71e",
-    "avatarUrl": "/assets/images/avatars/avatar_5.jpg",
-    "name": "Edwin Rath",
-    "company": "Pfannerstill - Reichert",
-    "isVerified": false,
-    "status": "active",
-    "role": "Full Stack Developer"
-} */

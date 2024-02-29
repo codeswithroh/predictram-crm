@@ -122,7 +122,6 @@ Nav.propTypes = {
 function NavItem({ item }) {
   const pathname = usePathname();
 
-  console.log(pathname.split('/'));
   const active = item.path === `/${pathname.split('/')[1]}`;
 
   return (
