@@ -47,12 +47,8 @@ export default function LoginView() {
     },
   });
 
-  const onSubmit = async (data) => {
-    mutate(data);
-  };
-
   const renderForm = (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(mutate)}>
       <Stack spacing={3}>
         <TextField name="email" label="Email address" {...register('email')} required />
 
