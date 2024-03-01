@@ -1,22 +1,67 @@
 import * as React from 'react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
+import { useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query';
 
 import Box from '@mui/material/Box';
 import Step from '@mui/material/Step';
+import { LoadingButton } from '@mui/lab';
 import Button from '@mui/material/Button';
-import { Container } from '@mui/material';
 import Stepper from '@mui/material/Stepper';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
+import { Grid, MenuItem, Container, TextField, IconButton, InputAdornment } from '@mui/material';
 
+import { useRouter } from 'src/routes/hooks';
+
+import OrganizationService from 'src/services/Organization.service';
+
+import Iconify from 'src/components/iconify';
 import PageHeader from 'src/components/pageHeader';
 
 const steps = ['Company details', 'Company Address', 'Primary user details'];
 
 export default function HorizontalLinearStepper() {
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set());
+  const [activeStep, setActiveStep] = useState(0);
+  const [skipped, setSkipped] = useState(new Set());
+  const [showPassword, setShowPassword] = useState(false);
+  // const [payload, setPayload] = useState(null);
+  const router = useRouter();
 
-  const isStepOptional = (step) => step === 1;
+  const { mutate, isPending } = useMutation({
+    mutationFn: (data) => {
+      console.log(data);
+      OrganizationService.register({
+        organization: {
+          name: data.name,
+          contact: data.contact,
+          email: data.email,
+          address: {
+            houseNumber: data.houseNumber,
+            area: data.area,
+            landmark: data.landmark,
+            pin: data.pin,
+            city: data.city,
+            state: data.state,
+            country: data.country,
+          },
+        },
+        user: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          password: data.password,
+          role: data.role,
+        },
+      });
+    },
+    onError: (err) => toast.error(err.message),
+    onSuccess: (data) => {
+      router.push('/organization');
+    },
+  });
 
   const isStepSkipped = (step) => skipped.has(step);
 
@@ -35,24 +80,191 @@ export default function HorizontalLinearStepper() {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
 
-  const handleSkip = () => {
-    if (!isStepOptional(activeStep)) {
-      // You probably want to guard against something like this,
-      // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
-    }
-
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
-
   const handleReset = () => {
     setActiveStep(0);
   };
+
+  const { register, handleSubmit } = useForm();
+
+  // const onSubmit = (data) => {
+  //   console.log(data);
+  //   setPayload(data);
+  // };
+
+  const profileForm = (
+    <Box sx={{ flexGrow: 1, px: 3, pt: 2 }}>
+      <Grid container spacing={2} sx={{ my: 3 }}>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="name"
+            label="Name"
+            {...register('name')}
+            sx={{ width: 1 }}
+            required
+            inputProps={{ minLength: 3, maxLength: 50 }}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="contact"
+            label="Contact"
+            {...register('contact')}
+            sx={{ width: 1 }}
+            required
+            inputProps={{ minLength: 10, maxLength: 13 }}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField name="email" label="Email" {...register('email')} sx={{ width: 1 }} required />
+        </Grid>
+      </Grid>
+    </Box>
+  );
+
+  const addressForm = (
+    <Box sx={{ flexGrow: 1, px: 3, pt: 2 }}>
+      <Grid container spacing={2} sx={{ my: 3 }}>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="houseNumber"
+            label="House number"
+            {...register('houseNumber')}
+            sx={{ width: 1 }}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="area"
+            label="Area"
+            {...register('area')}
+            sx={{ width: 1 }}
+            // inputProps={{ minLength: 10, maxLength: 10 }}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="landmark"
+            label="Landmark"
+            {...register('landmark')}
+            sx={{ width: 1 }}
+            // inputProps={{ minLength: 10, maxLength: 10 }}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="pin"
+            label="Pin code"
+            {...register('pin')}
+            sx={{ width: 1 }}
+            required
+            // inputProps={{ minLength: 3, maxLength: 50 }}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="city"
+            label="City"
+            {...register('city')}
+            sx={{ width: 1 }}
+            required
+            // inputProps={{ minLength: 3, maxLength: 50 }}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="state"
+            label="State"
+            {...register('state')}
+            sx={{ width: 1 }}
+            required
+            // inputProps={{ minLength: 3, maxLength: 50 }}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="country"
+            label="Country"
+            {...register('country')}
+            sx={{ width: 1 }}
+            required
+            // inputProps={{ minLength: 3, maxLength: 50 }}
+          />
+        </Grid>
+      </Grid>
+    </Box>
+  );
+
+  const userForm = (
+    <Box sx={{ flexGrow: 1, px: 3, pt: 2 }}>
+      <Grid container spacing={2} sx={{ my: 3 }}>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="firstName"
+            label="First Name"
+            {...register('firstName')}
+            sx={{ width: 1 }}
+            required
+            inputProps={{ minLength: 3, maxLength: 50 }}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="lastName"
+            label="Last Name"
+            {...register('lastName')}
+            sx={{ width: 1 }}
+            required
+            inputProps={{ minLength: 3, maxLength: 50 }}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="phone"
+            label="Phone"
+            {...register('phone')}
+            sx={{ width: 1 }}
+            required
+            inputProps={{ minLength: 10, maxLength: 13 }}
+          />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="role"
+            required
+            label="Role"
+            select
+            {...register('role')}
+            sx={{ width: 1 }}
+          >
+            <MenuItem value="ADMIN">ADMIN</MenuItem>
+            <MenuItem value="EMPLOYEE">EMPLOYEE</MenuItem>
+            <MenuItem value="CLIENT">CLIENT</MenuItem>
+          </TextField>
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField name="email" label="Email" {...register('email')} sx={{ width: 1 }} required />
+        </Grid>
+        <Grid item xs={12} lg={6}>
+          <TextField
+            name="password"
+            label="Password"
+            type={showPassword ? 'text' : 'password'}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
+                    <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            {...register('password')}
+            sx={{ width: 1 }}
+          />
+        </Grid>
+      </Grid>
+    </Box>
+  );
 
   return (
     <Container sx={{ mt: 3 }}>
@@ -62,9 +274,6 @@ export default function HorizontalLinearStepper() {
           {steps.map((label, index) => {
             const stepProps = {};
             const labelProps = {};
-            if (isStepOptional(index)) {
-              labelProps.optional = <Typography variant="caption">Optional</Typography>;
-            }
             if (isStepSkipped(index)) {
               stepProps.completed = false;
             }
@@ -86,8 +295,10 @@ export default function HorizontalLinearStepper() {
             </Box>
           </>
         ) : (
-          <>
-            <Typography sx={{ mt: 2, mb: 1 }}>Step {activeStep + 1}</Typography>
+          <form onSubmit={handleSubmit(mutate)}>
+            {activeStep === 0 && <div>{profileForm}</div>}
+            {activeStep === 1 && <div>{addressForm}</div>}
+            {activeStep === 2 && <div>{userForm}</div>}
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Button
                 color="inherit"
@@ -98,17 +309,16 @@ export default function HorizontalLinearStepper() {
                 Back
               </Button>
               <Box sx={{ flex: '1 1 auto' }} />
-              {isStepOptional(activeStep) && (
-                <Button color="inherit" onClick={handleSkip} sx={{ mr: 1 }}>
-                  Skip
-                </Button>
-              )}
 
-              <Button onClick={handleNext}>
-                {activeStep === steps.length - 1 ? 'Finish' : 'Next'}
-              </Button>
+              {activeStep === steps.length - 1 ? (
+                <LoadingButton type="submit" loading={isPending}>
+                  Register
+                </LoadingButton>
+              ) : (
+                <Button onClick={handleNext}>Next</Button>
+              )}
             </Box>
-          </>
+          </form>
         )}
       </Box>
     </Container>
