@@ -15,7 +15,7 @@ import BaseTable from 'src/components/table/BaseTable';
 export default function UserTable() {
   const tableFormat = [
     {
-      label: 'Name',
+      label: 'lasjfdalsfdj',
       accessor: ({ name, avatarUrl }) => (
         <Stack direction="row" alignItems="center" spacing={2}>
           <Avatar alt={name} src={avatarUrl} />
