@@ -28,6 +28,14 @@ export default defineConfig({
   },
   server: {
     port: 3030,
+    proxy: {
+      '/v1/api': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        secure: false,
+        ws: true,
+      },
+    },
   },
   preview: {
     port: 3030,

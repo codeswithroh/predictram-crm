@@ -4,7 +4,7 @@ import { OrganizationView } from 'src/sections/organization/view';
 
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function OrganizationPage() {
   return (
     <>
       <Helmet>

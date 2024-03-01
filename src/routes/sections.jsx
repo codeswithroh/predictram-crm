@@ -1,4 +1,5 @@
 import { lazy, Suspense } from 'react';
+import { useSelector } from 'react-redux';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
@@ -6,24 +7,28 @@ import DashboardLayout from 'src/layouts/dashboard';
 export const ProductsPage = lazy(() => import('src/pages/products'));
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const BlogPage = lazy(() => import('src/pages/blog'));
-export const UserPage = lazy(() => import('src/pages/user'));
+export const UserPage = lazy(() => import('src/pages/user/user'));
 export const OrganizationPage = lazy(() => import('src/pages/organization'));
-export const LoginPage = lazy(() => import('src/pages/login'));
-export const RegistrationPage = lazy(() => import('src/pages/register'));
-export const OrgRegistrationPage = lazy(() => import('src/pages/org-register'));
+export const LoginPage = lazy(() => import('src/pages/auth/login'));
+export const UserFormPage = lazy(() => import('src/pages/user/user-form'));
+export const OrgFormPage = lazy(() => import('src/pages/org-register'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 // ----------------------------------------------------------------------
 
 export default function Router() {
+  const auth = useSelector((state) => state?.user?.auth);
+
   const routes = useRoutes([
     {
-      element: (
+      element: auth ? (
         <DashboardLayout>
           <Suspense>
             <Outlet />
           </Suspense>
         </DashboardLayout>
+      ) : (
+        <Navigate to="/login" />
       ),
       children: [
         { element: <IndexPage />, index: true },
@@ -32,17 +37,17 @@ export default function Router() {
         { path: 'blog', element: <BlogPage /> },
         {
           path: 'user/add',
-          element: <RegistrationPage />,
+          element: <UserFormPage />,
         },
         {
           path: 'organization/add',
-          element: <OrgRegistrationPage />,
+          element: <OrgFormPage />,
         },
       ],
     },
     {
       path: 'login',
-      element: <LoginPage />,
+      element: !auth ? <LoginPage /> : <Navigate to="/" />,
     },
     {
       path: '404',
