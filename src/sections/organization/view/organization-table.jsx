@@ -12,7 +12,7 @@ import BaseTable from 'src/components/table/BaseTable';
 
 // ----------------------------------------------------------------------
 
-export default function UserTable() {
+export default function OrganizationTable() {
   const tableFormat = [
     {
       label: 'Name',

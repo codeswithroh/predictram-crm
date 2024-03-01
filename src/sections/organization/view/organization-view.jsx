@@ -9,7 +9,7 @@ import { RouterLink } from 'src/routes/components';
 import Iconify from 'src/components/iconify';
 import PageHeader from 'src/components/pageHeader';
 
-import UserTable from './organization-table';
+import OrganizationTable from './organization-table';
 
 export default function OrganizationPage() {
   return (
@@ -28,7 +28,7 @@ export default function OrganizationPage() {
           </Link>
         }
       />
-      <UserTable />
+      <OrganizationTable />
     </Container>
   );
 }

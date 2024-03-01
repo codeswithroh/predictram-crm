@@ -7,7 +7,9 @@ import {
   Box,
   Card,
   Grid,
+  Stack,
   // Stack,
+  Avatar,
   Divider,
   Container,
   // MenuItem,
@@ -18,7 +20,7 @@ import {
 
 import Iconify from 'src/components/iconify';
 import PageHeader from 'src/components/pageHeader';
-import UserTable from 'src/components/table/BaseTable';
+import BaseTable from 'src/components/table/BaseTable';
 
 import { CsvUpload } from '../../../components/form/csv-upload';
 
@@ -135,6 +137,38 @@ export default function RegisterView() {
       </Box>
     </form>
   );
+  const tableFormat = [
+    {
+      label: 'First Name',
+      accessor: ({ firstName, avatarUrl }) => (
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Avatar alt={firstName} src={avatarUrl} />
+          <Typography variant="subtitle2" noWrap>
+            {firstName}
+          </Typography>
+        </Stack>
+      ),
+    },
+    {
+      label: 'Last Name',
+      accessor: ({ lastName }) => (
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Typography variant="subtitle2" noWrap>
+            {lastName}
+          </Typography>
+        </Stack>
+      ),
+    },
+    { label: 'Phone', accessor: 'phone' },
+    { label: 'Email', accessor: 'email' },
+    {
+      label: 'Verified',
+      accessor: ({ isPhoneVerified, isEmailVerified }) =>
+        isPhoneVerified === '1' && isEmailVerified === '1' ? 'Yes' : 'No',
+    },
+  ];
+
+  console.log(users);
 
   return (
     <Container sx={{ mt: 3 }}>
@@ -152,7 +186,7 @@ export default function RegisterView() {
 
         <Box sx={{ p: 3 }}>
           {users.length > 0 ? (
-            <UserTable users={users} />
+            <BaseTable tableData={users} tableDataFormat={tableFormat} />
           ) : (
             <CsvUpload onInputChange={onInputChange} />
           )}

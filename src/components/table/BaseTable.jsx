@@ -21,7 +21,12 @@ import { applyFilters, getTableData, applyPagination } from './utils';
 
 // ----------------------------------------------------------------------
 
-export default function BaseTable({ tableData, tableDataFormat, filterables, actions = null }) {
+export default function BaseTable({
+  tableData,
+  tableDataFormat = null,
+  filterables = null,
+  actions = null,
+}) {
   const [page, setPage] = useState(0);
 
   const [query, setQuery] = useState('');
@@ -59,7 +64,7 @@ export default function BaseTable({ tableData, tableDataFormat, filterables, act
           <Table sx={{ minWidth: 800 }}>
             <BaseTableHead actions={actions} headLabel={tableDataFormat} />
             <TableBody>
-              {displayData.map((row) => (
+              {displayData?.map((row) => (
                 <BaseTableRow
                   actions={actions}
                   rowData={row}
