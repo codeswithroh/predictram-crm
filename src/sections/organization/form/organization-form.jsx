@@ -26,7 +26,7 @@ export default function HorizontalLinearStepper() {
   const [activeStep, setActiveStep] = useState(0);
   const [skipped, setSkipped] = useState(new Set());
   const [showPassword, setShowPassword] = useState(false);
-  // const [payload, setPayload] = useState(null);
+
   const router = useRouter();
 
   const { mutate, isPending } = useMutation({
@@ -85,11 +85,6 @@ export default function HorizontalLinearStepper() {
   };
 
   const { register, handleSubmit } = useForm();
-
-  // const onSubmit = (data) => {
-  //   console.log(data);
-  //   setPayload(data);
-  // };
 
   const profileForm = (
     <Box sx={{ flexGrow: 1, px: 3, pt: 2 }}>
@@ -324,87 +319,3 @@ export default function HorizontalLinearStepper() {
     </Container>
   );
 }
-
-// import { useForm } from 'react-hook-form';
-
-// import LoadingButton from '@mui/lab/LoadingButton';
-// import { Box, Card, Grid, Divider, Container, TextField, Typography } from '@mui/material';
-
-// import PageHeader from 'src/components/pageHeader';
-
-// // ----------------------------------------------------------------------
-
-// export default function RegisterView() {
-//   const { register, handleSubmit } = useForm();
-
-//   const onSubmit = (data) => console.log(data);
-
-//   const renderForm = (
-//     <form onSubmit={handleSubmit(onSubmit)}>
-//       <Box sx={{ flexGrow: 1, px: 3, pt: 2 }}>
-//         <Grid container spacing={2}>
-//           <Grid item xs={12} lg={6}>
-//             <TextField
-//               name="name"
-//               label="Name"
-//               {...register('firstName')}
-//               sx={{ width: 1 }}
-//               required
-//               inputProps={{ minLength: 3, maxLength: 50 }}
-//             />
-//           </Grid>
-//           <Grid item xs={12} lg={6}>
-//             <TextField
-//               name="contact"
-//               label="Contact"
-//               {...register('contact')}
-//               sx={{ width: 1 }}
-//               required
-//               inputProps={{ minLength: 10, maxLength: 10 }}
-//             />
-//           </Grid>
-//           <Grid item xs={12} lg={6}>
-//             <TextField
-//               name="email"
-//               label="Email"
-//               {...register('email')}
-//               sx={{ width: 1 }}
-//               required
-//             />
-//           </Grid>
-//           <Grid item xs={12} lg={6}>
-//             <TextField
-//               name="address"
-//               label="Address"
-//               {...register('address')}
-//               sx={{ width: 1 }}
-//               required
-//               inputProps={{ minLength: 3, maxLength: 50 }}
-//             />
-//           </Grid>
-//         </Grid>
-//         <LoadingButton
-//           fullWidth
-//           size="large"
-//           type="submit"
-//           variant="contained"
-//           color="inherit"
-//           sx={{ my: 3 }}
-//         >
-//           Register
-//         </LoadingButton>
-//       </Box>
-//     </form>
-//   );
-
-//   return (
-//     <Container sx={{ mt: 3 }}>
-//       <PageHeader title="Organization" />
-//       <Card>
-//         <Typography sx={{ fontWeight: 'bold', p: 3 }}>Add Organization Form</Typography>
-//         <Divider />
-//         {renderForm}
-//       </Card>
-//     </Container>
-//   );
-// }
