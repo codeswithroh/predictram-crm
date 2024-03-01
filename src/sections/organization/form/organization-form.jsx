@@ -31,7 +31,6 @@ export default function HorizontalLinearStepper() {
 
   const { mutate, isPending } = useMutation({
     mutationFn: (data) => {
-      console.log(data);
       OrganizationService.register({
         organization: {
           name: data.name,
