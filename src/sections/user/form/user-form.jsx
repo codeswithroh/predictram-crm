@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { useMutation } from '@tanstack/react-query'; 
+import { useRouter } from 'src/routes/hooks';
 
+import UserService from 'src/services/User.service';
 import LoadingButton from '@mui/lab/LoadingButton';
 import InputAdornment from '@mui/material/InputAdornment';
 import {
@@ -12,7 +15,7 @@ import {
   Avatar,
   Divider,
   Container,
-  // MenuItem,
+  MenuItem,
   TextField,
   Typography,
   IconButton,
@@ -30,9 +33,35 @@ export default function RegisterView() {
   const { register, handleSubmit } = useForm();
   const [users, setUsers] = useState([]);
 
+  const router = useRouter(); 
+
   const [showPassword, setShowPassword] = useState(false);
 
-  const onSubmit = (data) => console.log(data);
+  // const onSubmit = (data) => {
+  //    try {
+  //     console.log(data);
+  //     mutate(data); 
+  //   } catch (error) {
+  //     console.error('Error:', error);
+  //   }
+  // }
+
+   const { mutate, isPending } = useMutation({
+    mutationFn: (data) => 
+      UserService.register({
+        user: {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          email: data.email,
+          phone: data.phone,
+          password: data.password,
+          role: data.role,
+        },
+    }),
+    onError: (err) => console.error(err),
+    onSuccess: () => router.push('/user'),
+  });
+
   const onInputChange = (event) => {
     const file = event.target.files[0];
     const reader = new FileReader();
@@ -57,7 +86,7 @@ export default function RegisterView() {
   };
 
   const renderForm = (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(mutate)}>
       <Box sx={{ flexGrow: 1, px: 3, pt: 2 }}>
         <Grid container spacing={2}>
           <Grid item xs={12} lg={6}>
@@ -123,11 +152,26 @@ export default function RegisterView() {
               sx={{ width: 1 }}
             />
           </Grid>
+          <Grid item xs={12} lg={6}>
+          <TextField
+            name="role"
+            required
+            label="Role"
+            select
+            {...register('role')}
+            sx={{ width: 1 }}
+          >
+            <MenuItem value="ADMIN">ADMIN</MenuItem>
+            <MenuItem value="EMPLOYEE">EMPLOYEE</MenuItem>
+            <MenuItem value="CLIENT">CLIENT</MenuItem>
+          </TextField>
+        </Grid>
         </Grid>
         <LoadingButton
           fullWidth
           size="large"
           type="submit"
+          loading={isPending}
           variant="contained"
           color="inherit"
           sx={{ my: 3 }}
