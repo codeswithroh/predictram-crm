@@ -18,7 +18,7 @@ export default function UserFilter() {
             Filters
           </Typography>
 
-          <TextField label="Search phone number" name="phone" {...register('phone')} />
+          <TextField label="Search phone number" name="phone" {...register('phone')}  />
           <TextField label="Search email" name="email" {...register('email')} />
           <LoadingButton fullWidth size="large" type="submit" variant="contained" color="inherit">
             Apply

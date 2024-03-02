@@ -44,7 +44,6 @@ export default function BaseTable({
 
   const handleFilter = (event) => {
     // setPage(0);
-    console.log(event.target.value);
     setQuery(event.target.value);
   };
 

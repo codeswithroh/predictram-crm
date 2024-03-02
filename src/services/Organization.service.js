@@ -10,6 +10,14 @@ class OrganizationService extends ApiService {
     register(payload) {
         return this.post(payload);
     }
+
+    /**
+     * Function to fetch organizations
+     * from the backend. 
+     */
+    getOrgs() {
+        return this.get();
+    }
 }
 
 export default new OrganizationService();

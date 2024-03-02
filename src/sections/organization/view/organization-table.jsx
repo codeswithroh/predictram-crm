@@ -1,18 +1,13 @@
-// import { useState } from 'react';
-
 import Stack from '@mui/material/Stack';
 import { Avatar, MenuItem } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
-import { users } from 'src/_mock/user';
-
-import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import BaseTable from 'src/components/table/BaseTable';
 
 // ----------------------------------------------------------------------
 
-export default function OrganizationTable() {
+export default function OrganizationTable({ organizations }) {
   const tableFormat = [
     {
       label: 'Name',
@@ -25,22 +20,15 @@ export default function OrganizationTable() {
         </Stack>
       ),
     },
-    { label: 'Company', accessor: 'company' },
-    { label: 'Role', accessor: 'role' },
-    { label: 'Verified', accessor: ({ isVerified }) => (isVerified ? 'Yes' : 'No') },
-    {
-      label: 'status',
-      accessor: ({ status }) => (
-        <Label color={(status === 'banned' && 'error') || 'success'}>{status}</Label>
-      ),
-    },
+    { label: 'Contact', accessor: 'contact' },
+    { label: 'Email', accessor: 'email' },
   ];
 
   return (
     <BaseTable
-      tableData={users}
+      tableData={organizations}
       tableDataFormat={tableFormat}
-      filterables={['name', 'company', 'role']}
+      filterables={['name', 'contact', 'email']}
       actions={
         <div>
           <MenuItem>
