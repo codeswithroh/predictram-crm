@@ -7,7 +7,7 @@ import BaseTable from 'src/components/table/BaseTable';
 
 // ----------------------------------------------------------------------
 
-export default function OrganizationTable({ organizations }) {
+export default function OrganizationTable({ organizations, filterQuery }) {
   const tableFormat = [
     {
       label: 'Name',
@@ -26,6 +26,7 @@ export default function OrganizationTable({ organizations }) {
 
   return (
     <BaseTable
+      filterQuery={filterQuery}
       tableData={organizations}
       tableDataFormat={tableFormat}
       filterables={['name', 'contact', 'email']}

@@ -11,9 +11,20 @@ import Button from '@mui/material/Button';
 import Stepper from '@mui/material/Stepper';
 import StepLabel from '@mui/material/StepLabel';
 import Typography from '@mui/material/Typography';
-import { Grid, MenuItem, Container, TextField, IconButton, InputAdornment } from '@mui/material';
+import {
+  Grid,
+  Card,
+  Divider,
+  MenuItem,
+  Container,
+  TextField,
+  IconButton,
+  InputAdornment,
+} from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
+
+import { prependCountryCode } from 'src/utils/format-number';
 
 import OrganizationService from 'src/services/Organization.service';
 
@@ -30,12 +41,12 @@ export default function HorizontalLinearStepper() {
   const router = useRouter();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data) => {
+    mutationFn: (data) =>
       OrganizationService.register({
         organization: {
           name: data.name,
-          contact: data.contact,
-          email: data.email,
+          contact: prependCountryCode(data.contact),
+          email: data.orgEmail,
           address: {
             houseNumber: data.houseNumber,
             area: data.area,
@@ -50,13 +61,14 @@ export default function HorizontalLinearStepper() {
           firstName: data.firstName,
           lastName: data.lastName,
           email: data.email,
-          phone: data.phone,
+          phone: prependCountryCode(data.phone),
           password: data.password,
           role: data.role,
         },
-      });
+      }),
+    onError: (err) => {
+      toast.error(err.message);
     },
-    onError: (err) => toast.error(err.message),
     onSuccess: (data) => {
       router.push('/organization');
     },
@@ -86,7 +98,7 @@ export default function HorizontalLinearStepper() {
   const { register, handleSubmit } = useForm();
 
   const profileForm = (
-    <Box sx={{ flexGrow: 1, px: 3, pt: 2 }}>
+    <Box sx={{ flexGrow: 1, pt: 2 }}>
       <Grid container spacing={2} sx={{ my: 3 }}>
         <Grid item xs={12} lg={6}>
           <TextField
@@ -105,18 +117,25 @@ export default function HorizontalLinearStepper() {
             {...register('contact')}
             sx={{ width: 1 }}
             required
-            inputProps={{ minLength: 10, maxLength: 13 }}
+            // defaultValue="+91"
+            inputProps={{ minLength: 10, maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} lg={6}>
-          <TextField name="email" label="Email" {...register('email')} sx={{ width: 1 }} required />
+          <TextField
+            name="email"
+            label="Email"
+            {...register('orgEmail')}
+            sx={{ width: 1 }}
+            required
+          />
         </Grid>
       </Grid>
     </Box>
   );
 
   const addressForm = (
-    <Box sx={{ flexGrow: 1, px: 3, pt: 2 }}>
+    <Box sx={{ flexGrow: 1, pt: 2 }}>
       <Grid container spacing={2} sx={{ my: 3 }}>
         <Grid item xs={12} lg={6}>
           <TextField
@@ -189,7 +208,7 @@ export default function HorizontalLinearStepper() {
   );
 
   const userForm = (
-    <Box sx={{ flexGrow: 1, px: 3, pt: 2 }}>
+    <Box sx={{ flexGrow: 1, pt: 2 }}>
       <Grid container spacing={2} sx={{ my: 3 }}>
         <Grid item xs={12} lg={6}>
           <TextField
@@ -218,7 +237,7 @@ export default function HorizontalLinearStepper() {
             {...register('phone')}
             sx={{ width: 1 }}
             required
-            inputProps={{ minLength: 10, maxLength: 13 }}
+            inputProps={{ minLength: 10, maxLength: 10 }}
           />
         </Grid>
         <Grid item xs={12} lg={6}>
@@ -263,58 +282,69 @@ export default function HorizontalLinearStepper() {
   return (
     <Container sx={{ mt: 3 }}>
       <PageHeader title="Organization" />
-      <Box sx={{ width: '100%' }}>
-        <Stepper activeStep={activeStep}>
-          {steps.map((label, index) => {
-            const stepProps = {};
-            const labelProps = {};
-            if (isStepSkipped(index)) {
-              stepProps.completed = false;
-            }
-            return (
-              <Step key={label} {...stepProps}>
-                <StepLabel {...labelProps}>{label}</StepLabel>
-              </Step>
-            );
-          })}
-        </Stepper>
-        {activeStep === steps.length ? (
-          <>
-            <Typography sx={{ mt: 2, mb: 1 }}>
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Box sx={{ flex: '1 1 auto' }} />
-              <Button onClick={handleReset}>Reset</Button>
-            </Box>
-          </>
-        ) : (
-          <form onSubmit={handleSubmit(mutate)}>
-            {activeStep === 0 && <div>{profileForm}</div>}
-            {activeStep === 1 && <div>{addressForm}</div>}
-            {activeStep === 2 && <div>{userForm}</div>}
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
-              <Button
-                color="inherit"
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                sx={{ mr: 1 }}
-              >
-                Back
-              </Button>
-              <Box sx={{ flex: '1 1 auto' }} />
+      <Card>
+        <Typography sx={{ fontWeight: 'bold', p: 3 }}>Add Organization Form</Typography>
+        <Divider />
+        <Box sx={{ width: '100%', p: 3 }}>
+          <Stepper activeStep={activeStep}>
+            {steps.map((label, index) => {
+              const stepProps = {};
+              const labelProps = {};
+              if (isStepSkipped(index)) {
+                stepProps.completed = false;
+              }
+              return (
+                <Step key={label} {...stepProps}>
+                  <StepLabel {...labelProps}>{label}</StepLabel>
+                </Step>
+              );
+            })}
+          </Stepper>
+          {activeStep === steps.length ? (
+            <>
+              <Typography sx={{ mt: 2, mb: 1 }}>
+                All steps completed - you&apos;re finished
+              </Typography>
+              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                <Box sx={{ flex: '1 1 auto' }} />
+                <Button onClick={handleReset}>Reset</Button>
+              </Box>
+            </>
+          ) : (
+            <form onSubmit={handleSubmit(mutate)}>
+              {activeStep === 0 && <div>{profileForm}</div>}
+              {activeStep === 1 && <div>{addressForm}</div>}
+              {activeStep === 2 && <div>{userForm}</div>}
+              <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+                <Button
+                  color="inherit"
+                  disabled={activeStep === 0}
+                  onClick={handleBack}
+                  sx={{ mr: 1 }}
+                >
+                  Back
+                </Button>
+                <Box sx={{ flex: '1 1 auto' }} />
 
-              {activeStep === steps.length - 1 ? (
-                <LoadingButton type="submit" loading={isPending}>
-                  Register
-                </LoadingButton>
-              ) : (
-                <Button onClick={handleNext}>Next</Button>
-              )}
-            </Box>
-          </form>
-        )}
-      </Box>
+                {activeStep === steps.length - 1 ? (
+                  <LoadingButton
+                    type="submit"
+                    loading={isPending}
+                    variant="contained"
+                    color="inherit"
+                  >
+                    Register
+                  </LoadingButton>
+                ) : (
+                  <Button onClick={handleNext} color="inherit">
+                    Next
+                  </Button>
+                )}
+              </Box>
+            </form>
+          )}
+        </Box>
+      </Card>
     </Container>
   );
 }

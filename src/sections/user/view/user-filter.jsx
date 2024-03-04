@@ -1,14 +1,25 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { LoadingButton } from '@mui/lab';
-import { Card, Stack } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { Card, Stack, Button } from '@mui/material';
 
-export default function UserFilter() {
+export default function UserFilter({ queryData, filterQuery, setFilterQuery }) {
   const { register, handleSubmit } = useForm();
+  const [phone, setPhone] = useState('');
+  const [email, setEmail] = useState('');
 
-  const onSubmit = (data) => console.log(data);
+  const handleClearClick = () => {
+    setFilterQuery({ phone: '', email: '' });
+    setPhone('');
+    setEmail('');
+  };
+
+  const onSubmit = (data) => {
+    queryData(data);
+  };
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -17,12 +28,38 @@ export default function UserFilter() {
           <Typography variant="h6" marginBottom="10px">
             Filters
           </Typography>
-
-          <TextField label="Search phone number" name="phone" {...register('phone')}  />
-          <TextField label="Search email" name="email" {...register('email')} />
+          <TextField
+            value={phone}
+            label="Search phone number"
+            name="phone"
+            {...register('phone')}
+            onChange={(event) => {
+              setPhone(event.target.value);
+            }}
+          />
+          <TextField
+            value={email}
+            label="Search email"
+            name="email"
+            {...register('email')}
+            onChange={(event) => {
+              setEmail(event.target.value);
+            }}
+          />
           <LoadingButton fullWidth size="large" type="submit" variant="contained" color="inherit">
             Apply
           </LoadingButton>
+          {filterQuery && (
+            <Button
+              variant="outlined"
+              onClick={handleClearClick}
+              fullWidth
+              size="large"
+              color="inherit"
+            >
+              Clear Filter
+            </Button>
+          )}
         </Stack>
       </Card>
     </form>

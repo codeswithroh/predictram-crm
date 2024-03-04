@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import toast from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
 
@@ -17,6 +18,7 @@ import UserFilter from 'src/sections/user/view/user-filter';
 import OrganizationTable from './organization-table';
 
 export default function OrganizationPage() {
+  const [filterQuery, setFilterQuery] = useState('');
   const { data, isLoading } = useQuery({
     queryKey: ['organizations'],
     queryFn: () => {
@@ -25,9 +27,10 @@ export default function OrganizationPage() {
     },
     onError: (err) => toast.error(err.message),
   });
-  if (!isLoading) {
-    console.log(data.data);
-  }
+
+  const queryData = (d) => {
+    setFilterQuery(d);
+  };
 
   return (
     <Container sx={{ mt: 3 }}>
@@ -45,10 +48,14 @@ export default function OrganizationPage() {
           </Link>
         }
       />
-      {data && (
+      {!isLoading && data && (
         <Stack direction={{ xs: 'column', sm: 'row' }} gap={3}>
-          <UserFilter />
-          <OrganizationTable organizations={data?.data} />
+          <UserFilter
+            queryData={queryData}
+            filterQuery={filterQuery}
+            setFilterQuery={setFilterQuery}
+          />
+          <OrganizationTable filterQuery={filterQuery} organizations={data?.data} />
         </Stack>
       )}
     </Container>

@@ -168,8 +168,6 @@ export default function RegisterView() {
     },
   ];
 
-  console.log(users);
-
   return (
     <Container sx={{ mt: 3 }}>
       <PageHeader title="Users" />
