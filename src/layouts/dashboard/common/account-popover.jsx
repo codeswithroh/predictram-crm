@@ -67,7 +67,9 @@ export default function AccountPopover() {
         }}
       >
         <Avatar
-          src={`https://ui-avatars.com/api/?name=${user?.firstName}+${user?.lastName}`}
+          src={
+            user?.avatar || `https://ui-avatars.com/api/?name=${user?.firstName}+${user?.lastName}`
+          }
           alt={`${user?.firstName} ${user?.lastName}`}
           sx={{
             width: 36,

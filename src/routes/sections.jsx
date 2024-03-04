@@ -2,6 +2,8 @@ import { lazy, Suspense } from 'react';
 import { useSelector } from 'react-redux';
 import { Outlet, Navigate, useRoutes } from 'react-router-dom';
 
+import { getRouteFromRole } from 'src/utils/routeAccess';
+
 import DashboardLayout from 'src/layouts/dashboard';
 import MarketCallFormPage from 'src/pages/marketcall/martketcall-form';
 import MarketCallDetailsPage from 'src/pages/marketcall/marketcall-details';
@@ -21,6 +23,23 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export default function Router() {
   const auth = useSelector((state) => state?.user?.auth);
 
+  const user = useSelector((state) => state?.user?.details);
+
+  const prodectedRoutes = [
+    { path: 'user', element: <UserPage /> },
+    { path: 'organization', element: <OrganizationPage /> },
+    { path: 'market-call', element: <MarketCallPage /> },
+    { path: 'market-call/details/:id', element: <MarketCallDetailsPage /> },
+    { path: 'market-call/add', element: <MarketCallFormPage /> },
+    {
+      path: 'user/add',
+      element: <UserFormPage />,
+    },
+    {
+      path: 'organization/add',
+      element: <OrgFormPage />,
+    },
+  ];
   const routes = useRoutes([
     {
       element: auth ? (
@@ -34,19 +53,7 @@ export default function Router() {
       ),
       children: [
         { element: <IndexPage />, index: true },
-        { path: 'user', element: <UserPage /> },
-        { path: 'organization', element: <OrganizationPage /> },
-        { path: 'market-call', element: <MarketCallPage /> },
-        { path: 'market-call/details/:id', element: <MarketCallDetailsPage /> },
-        { path: 'market-call/add', element: <MarketCallFormPage /> },
-        {
-          path: 'user/add',
-          element: <UserFormPage />,
-        },
-        {
-          path: 'organization/add',
-          element: <OrgFormPage />,
-        },
+        ...getRouteFromRole(user?.role, prodectedRoutes),
       ],
     },
     {

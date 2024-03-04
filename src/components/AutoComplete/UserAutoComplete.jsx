@@ -18,12 +18,14 @@ function UserAutocomplete({
   lg,
   md,
   multiple,
+  enabled,
 }) {
   const { data = [] } = useQuery({
-    queryKey: ['user-autocomplete'],
+    queryKey: ['user-autocomplete', filter],
     queryFn: () => UserService.get(filter),
     select: (res) => res?.data || [],
     staleTime: 60000 * 10,
+    enabled,
   });
 
   return (

@@ -20,7 +20,7 @@ function OrganizationAutocomplete({
   multiple,
 }) {
   const { data = [] } = useQuery({
-    queryKey: ['organization-autocomplete'],
+    queryKey: ['organization-autocomplete', filter],
     queryFn: () => OrganizationService.get(filter),
     select: (res) => res?.data || [],
     staleTime: 60000 * 10,

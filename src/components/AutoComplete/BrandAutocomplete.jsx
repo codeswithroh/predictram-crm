@@ -58,7 +58,7 @@ function BrandAutocomplete({
         disabled={disabled}
         defaultValue={getDefaultValue()}
         renderOption={(props, o) => (
-          <li {...props}>
+          <li {...props} key={o.value}>
             {o.avatar && (
               <Avatar
                 sx={{

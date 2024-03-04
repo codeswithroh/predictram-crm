@@ -16,6 +16,10 @@ import { RouterLink } from 'src/routes/components';
 
 // import { account } from 'src/_mock/account';
 
+import { useSelector } from 'react-redux';
+
+import { getRouteFromRole } from 'src/utils/routeAccess';
+
 import Logo from 'src/components/logo';
 import Scrollbar from 'src/components/scrollbar';
 
@@ -28,6 +32,7 @@ export default function Nav({ openNav, onCloseNav }) {
   const pathname = usePathname();
 
   // const upLg = useResponsive('up', 'lg');
+  const user = useSelector((state) => state?.user?.details);
 
   useEffect(() => {
     if (openNav) {
@@ -63,7 +68,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
   const renderMenu = (
     <Stack component="nav" spacing={0.5} sx={{ px: 2 }}>
-      {navConfig.map((item) => (
+      {getRouteFromRole(user?.role, navConfig).map((item) => (
         <NavItem key={item.title} item={item} />
       ))}
     </Stack>
@@ -122,7 +127,7 @@ Nav.propTypes = {
 function NavItem({ item }) {
   const pathname = usePathname();
 
-  const active = item.path === `/${pathname.split('/')[1]}`;
+  const active = item.path === `${pathname.split('/')[1]}`;
 
   return (
     <ListItemButton

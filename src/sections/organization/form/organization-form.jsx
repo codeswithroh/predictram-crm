@@ -15,7 +15,6 @@ import {
   Grid,
   Card,
   Divider,
-  MenuItem,
   Container,
   TextField,
   IconButton,
@@ -26,6 +25,7 @@ import { useRouter } from 'src/routes/hooks';
 
 import { prependCountryCode } from 'src/utils/format-number';
 
+import { ROLES } from 'src/enums';
 import OrganizationService from 'src/services/Organization.service';
 
 import Iconify from 'src/components/iconify';
@@ -63,7 +63,7 @@ export default function HorizontalLinearStepper() {
           email: data.email,
           phone: prependCountryCode(data.phone),
           password: data.password,
-          role: data.role,
+          role: ROLES.ADMIN,
         },
       }),
     onError: (err) => {
@@ -240,20 +240,7 @@ export default function HorizontalLinearStepper() {
             inputProps={{ minLength: 10, maxLength: 10 }}
           />
         </Grid>
-        <Grid item xs={12} lg={6}>
-          <TextField
-            name="role"
-            required
-            label="Role"
-            select
-            {...register('role')}
-            sx={{ width: 1 }}
-          >
-            <MenuItem value="ADMIN">ADMIN</MenuItem>
-            <MenuItem value="EMPLOYEE">EMPLOYEE</MenuItem>
-            <MenuItem value="CLIENT">CLIENT</MenuItem>
-          </TextField>
-        </Grid>
+
         <Grid item xs={12} lg={6}>
           <TextField name="email" label="Email" {...register('email')} sx={{ width: 1 }} required />
         </Grid>
@@ -320,6 +307,7 @@ export default function HorizontalLinearStepper() {
                   color="inherit"
                   disabled={activeStep === 0}
                   onClick={handleBack}
+                  variant="outlined"
                   sx={{ mr: 1 }}
                 >
                   Back
@@ -336,7 +324,7 @@ export default function HorizontalLinearStepper() {
                     Register
                   </LoadingButton>
                 ) : (
-                  <Button onClick={handleNext} color="inherit">
+                  <Button onClick={handleNext} color="inherit" variant="outlined">
                     Next
                   </Button>
                 )}

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import Button from '@mui/material/Button';
-import { Link, Stack } from '@mui/material';
+import { Grid, Link } from '@mui/material';
 import Container from '@mui/material/Container';
 
 import { RouterLink } from 'src/routes/components';
@@ -17,25 +17,22 @@ export default function OrganizationPage() {
 
   return (
     <Container sx={{ mt: 3 }}>
-      <PageHeader
-        title="Organization"
-        items={
-          <Link component={RouterLink} href="/organization/add">
-            <Button
-              variant="contained"
-              color="inherit"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-            >
-              New Organization
-            </Button>
-          </Link>
-        }
-      />
+      <PageHeader title="Organization">
+        <Link component={RouterLink} href="/organization/add">
+          <Button variant="contained" color="inherit" startIcon={<Iconify icon="eva:plus-fill" />}>
+            New Organization
+          </Button>
+        </Link>
+      </PageHeader>
 
-      <Stack direction={{ xs: 'column', sm: 'row' }} gap={3}>
-        <OrganizationFilter setFilterQuery={setFilterQuery} />
-        <OrganizationTable filterQuery={filterQuery} />
-      </Stack>
+      <Grid container>
+        <Grid item md={3} xs={12} paddingRight={{ md: 2, xs: 0 }} paddingBottom={{ md: 0, xs: 2 }}>
+          <OrganizationFilter setFilterQuery={setFilterQuery} />
+        </Grid>
+        <Grid item md={9} xs={12}>
+          <OrganizationTable filterQuery={filterQuery} />
+        </Grid>
+      </Grid>
     </Container>
   );
 }

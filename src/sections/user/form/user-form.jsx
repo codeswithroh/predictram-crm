@@ -13,6 +13,7 @@ import {
   Avatar,
   Divider,
   MenuItem,
+  Collapse,
   Container,
   TextField,
   Typography,
@@ -21,13 +22,17 @@ import {
 
 import { useRouter } from 'src/routes/hooks';
 
+import { prependCountryCode } from 'src/utils/format-number';
+
 import AuthService from 'src/services/Auth.service';
 
 import Iconify from 'src/components/iconify';
 import PageHeader from 'src/components/pageHeader';
 import BaseTable from 'src/components/table/BaseTable';
+import FileFormat from 'src/components/FileFormat/file-format';
+import FileUploader from 'src/components/FileUploader/file-uploader';
 
-import { CsvUpload } from '../../../components/form/csv-upload';
+// import { CsvUpload } from '../../../components/form/csv-upload';
 
 // ----------------------------------------------------------------------
 
@@ -40,46 +45,28 @@ export default function RegisterView() {
   const [showPassword, setShowPassword] = useState(false);
 
   const { mutate, isPending } = useMutation({
-    mutationFn: (data) =>
-      AuthService.register([
+    mutationFn: (data) => {
+      if (Array.isArray(data)) {
+        return AuthService.register(data);
+      }
+      return AuthService.register([
         {
           firstName: data.firstName,
           lastName: data.lastName,
           email: data.email,
-          phone: data.phone,
+          phone: prependCountryCode(data.phone),
           password: data.password,
           role: data.role,
         },
-      ]),
+      ]);
+    },
+    enabled: !!users,
     onError: (err) => toast.error(err.message),
     onSuccess: (data) => {
       toast.success(data.message);
       router.push('/user');
     },
   });
-
-  const onInputChange = (event) => {
-    const file = event.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      const lines = reader.result.split('\n');
-      const headers = lines[0].split(',');
-      const userss = [];
-
-      for (let i = 1; i < lines.length; i += 1) {
-        const data = lines[i].split(',');
-        const user = {};
-        for (let j = 0; j < headers.length; j += 1) {
-          user[headers[j].trim()] = data[j].trim();
-        }
-        userss.push(user);
-      }
-      setUsers(userss);
-    };
-
-    reader.readAsText(file);
-  };
 
   const renderForm = (
     <form onSubmit={handleSubmit(mutate)}>
@@ -112,7 +99,7 @@ export default function RegisterView() {
               {...register('phone')}
               sx={{ width: 1 }}
               required
-              inputProps={{ minLength: 10, maxLength: 13 }}
+              inputProps={{ minLength: 10, maxLength: 10 }}
             />
           </Grid>
           <Grid item xs={12} lg={6}>
@@ -195,32 +182,51 @@ export default function RegisterView() {
     },
     { label: 'Phone', accessor: 'phone' },
     { label: 'Email', accessor: 'email' },
-    {
-      label: 'Verified',
-      accessor: ({ isPhoneVerified, isEmailVerified }) =>
-        isPhoneVerified === '1' && isEmailVerified === '1' ? 'Yes' : 'No',
-    },
+    { label: 'role', accessor: 'role' },
+    { label: 'Password', accessor: 'password' },
   ];
 
   return (
     <Container sx={{ mt: 3 }}>
       <PageHeader title="Users" />
       <Card>
-        <Typography sx={{ fontWeight: 'bold', p: 3 }}>Add User Form</Typography>
-        <Divider />
-        {renderForm}
+        <Collapse in={!users.length}>
+          <Typography sx={{ fontWeight: 'bold', p: 3 }}>Add User Form</Typography>
+          <Divider />
+          {renderForm}
 
-        <Divider>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            OR
-          </Typography>
-        </Divider>
+          <Divider>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              OR
+            </Typography>
+          </Divider>
+        </Collapse>
 
-        <Box sx={{ p: 3 }}>
-          {users.length > 0 ? (
-            <BaseTable tableData={users} tableDataFormat={tableFormat} />
-          ) : (
-            <CsvUpload onInputChange={onInputChange} />
+        <Box sx={{ p: 3, display: 'flex', flexDirection: 'column', gap: 3 }}>
+          <Typography fontWeight="bold">Bulk User Register</Typography>
+
+          <FileUploader
+            setData={setUsers}
+            requiredFields={['firstName', 'lastName', 'role', 'phone', 'email', 'password']}
+          />
+
+          {!users.length && <FileFormat gid={0} />}
+
+          {users.length > 0 && (
+            <Box>
+              <BaseTable tableData={users} tableDataFormat={tableFormat} />
+              <LoadingButton
+                fullWidth
+                size="large"
+                type="submit"
+                onClick={() => mutate(users)}
+                loading={isPending}
+                variant="contained"
+                color="inherit"
+              >
+                Register
+              </LoadingButton>
+            </Box>
           )}
         </Box>
       </Card>

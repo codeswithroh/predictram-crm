@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { isEqual } from 'lodash';
 
 import Card from '@mui/material/Card';
 // import Stack from '@mui/material/Stack';
@@ -63,16 +62,7 @@ export default function BaseTable({
     setQuery(event.target.value);
   };
 
-  let filteredData;
-  if (filterQuery && !query && !isEqual(filterQuery, { phone: '', email: '' })) {
-    if (filterQuery.email) {
-      filteredData = applyFilters(tableData, filterQuery.email, filterables);
-    } else if (filterQuery.phone) {
-      filteredData = applyFilters(tableData, filterQuery.phone, filterables);
-    }
-  } else {
-    filteredData = applyFilters(tableData, query, filterables);
-  }
+  const filteredData = applyFilters(tableData, query, filterables);
 
   const paginatedData = customPagination
     ? filteredData
@@ -85,15 +75,17 @@ export default function BaseTable({
   return (
     <Card sx={{ ...cardStyle }}>
       <BaseTableToolbar filter={query} onFilter={handleFilter} filterables={filterables} />
-      <Scrollbar>
-        {!loading ? (
+      {loading && <FetchLoader />}
+      {!loading && (
+        <Scrollbar>
           <TableContainer sx={{ overflow: 'unset' }}>
-            <Table sx={{ minWidth: 800 }}>
+            <Table>
               <BaseTableHead actions={actions} headLabel={tableDataFormat} />
 
               <TableBody>
-                {displayData?.map((row) => (
+                {displayData?.map((row, idx) => (
                   <BaseTableRow
+                    key={idx}
                     actions={actions}
                     rowData={row}
                     handleClick={(event) => console.log(row)} // TODO: do something on click of table row
@@ -101,16 +93,14 @@ export default function BaseTable({
                 ))}
 
                 {notFound ||
-                  (displayData.length === 0 && (
-                    <TableNoData query={query} blankTableData={displayData.length === 0} />
+                  (displayData?.length === 0 && (
+                    <TableNoData query={query} blankTableData={displayData?.length === 0} />
                   ))}
               </TableBody>
             </Table>
           </TableContainer>
-        ) : (
-          <FetchLoader />
-        )}
-      </Scrollbar>
+        </Scrollbar>
+      )}
       {showPagination && (
         <TablePagination
           page={customPagination ? filter?.page : page}

@@ -22,21 +22,18 @@ export default function BlogView() {
 
   return (
     <Container sx={{ mt: 3 }}>
-      <PageHeader
-        title="Market Call"
-        items={
-          <AccessControl accepted_roles={[ROLES.EMPLOYEE]}>
-            <Button
-              variant="contained"
-              color="inherit"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              onClick={() => router.push('/market-call/add')}
-            >
-              Add New Market Call
-            </Button>
-          </AccessControl>
-        }
-      />
+      <PageHeader title="Market Call">
+        <AccessControl accepted_roles={[ROLES.EMPLOYEE]}>
+          <Button
+            variant="contained"
+            color="inherit"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            onClick={() => router.push('/market-call/add')}
+          >
+            Add New Market Call
+          </Button>
+        </AccessControl>
+      </PageHeader>
       <MarketCallFilter setFilter={setFilter} filter={filter} />
       <MarketCallCards filter={filter} setFilter={setFilter} />
     </Container>

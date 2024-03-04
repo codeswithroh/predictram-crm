@@ -4,62 +4,50 @@ import Stack from '@mui/material/Stack';
 import { Avatar, MenuItem } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
-import Label from 'src/components/label';
+import cleanObject from 'src/utils/cleanObject';
+
+import UserService from 'src/services/User.service';
+
 import Iconify from 'src/components/iconify';
 import BaseTable from 'src/components/table/BaseTable';
 
-import UserService from '../../../services/User.service';
-// import { useRouter } from 'src/routes/hooks';
-
 // ----------------------------------------------------------------------
 
-export default function UserTable() {
-  // const router = useRouter();
-
-  const { data } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => {
-      const response = UserService.getUsers();
-      return response;
-    },
-  });
-
+export default function UserTable({ filterQuery }) {
   const tableFormat = [
     {
-      label: 'First Name',
-      accessor: ({ firstName, avatar }) => (
+      label: 'Name',
+      accessor: ({ firstName, avatar, lastName }) => (
         <Stack direction="row" alignItems="center" spacing={2}>
-          <Avatar alt={firstName} src={avatar} />
+          <Avatar
+            alt={firstName}
+            src={avatar || `https://ui-avatars.com/api/?name=${firstName}+${lastName}`}
+          />
           <Typography variant="subtitle2" noWrap>
-            {firstName}
+            {`${firstName} ${lastName}`}
           </Typography>
         </Stack>
       ),
     },
-    { label: 'Last Name', accessor: 'lastName' },
+
     { label: 'Phone', accessor: 'phone' },
     { label: 'Email', accessor: 'email' },
     { label: 'Role', accessor: 'role' },
-    { label: 'Organization', accessor: 'organization' },
-    {
-      label: 'Verified',
-      accessor: ({ isPhoneVerified, isEmailVerified }) =>
-        isPhoneVerified && isEmailVerified ? 'Yes' : 'No',
-    },
-    // { label: 'Verified', accessor: ({ isVerified }) => (isVerified ? 'Yes' : 'No') },
-    {
-      label: 'IsEnabled',
-      accessor: ({ isEnabled }) => (
-        <Label color={isEnabled ? 'success' : 'error'}>{isEnabled ? 'True' : 'False'}</Label>
-      ),
-    },
   ];
+
+  const { data = [], isLoading } = useQuery({
+    queryKey: ['users', filterQuery],
+    queryFn: () => UserService.get(cleanObject(filterQuery)),
+    select: (res) => res?.data || [],
+  });
 
   return (
     <BaseTable
-      tableData={data.data}
+      filter={filterQuery}
+      tableData={data}
+      loading={isLoading}
       tableDataFormat={tableFormat}
-      filterables={['lastName', 'email', 'organisation']}
+      filterables={['lastName', 'email']}
       actions={
         <div>
           <MenuItem>

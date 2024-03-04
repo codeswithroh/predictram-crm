@@ -1,5 +1,3 @@
-import PropTypes from 'prop-types';
-
 // import Box from '@mui/material/Box';
 import TableRow from '@mui/material/TableRow';
 // import Checkbox from '@mui/material/Checkbox';
@@ -11,16 +9,7 @@ import TableCell from '@mui/material/TableCell';
 
 // ----------------------------------------------------------------------
 
-export default function BaseTableHead({
-  order,
-  orderBy,
-  rowCount,
-  headLabel,
-  actions,
-  numSelected,
-  onRequestSort,
-  onSelectAllClick,
-}) {
+export default function BaseTableHead({ headLabel, actions }) {
   // const onSort = (property) => (event) => {
   //   onRequestSort(event, property);
   // };
@@ -42,13 +31,3 @@ export default function BaseTableHead({
     </TableHead>
   );
 }
-
-BaseTableHead.propTypes = {
-  order: PropTypes.oneOf(['asc', 'desc']),
-  orderBy: PropTypes.string,
-  rowCount: PropTypes.number,
-  headLabel: PropTypes.array,
-  numSelected: PropTypes.number,
-  onRequestSort: PropTypes.func,
-  onSelectAllClick: PropTypes.func,
-};
