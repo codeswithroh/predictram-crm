@@ -21,6 +21,8 @@ import {
 
 import { useRouter } from 'src/routes/hooks';
 
+import { prependCountryCode } from 'src/utils/format-number';
+
 import AuthService from 'src/services/Auth.service';
 
 import Iconify from 'src/components/iconify';
@@ -46,17 +48,26 @@ export default function RegisterView() {
           firstName: data.firstName,
           lastName: data.lastName,
           email: data.email,
-          phone: data.phone,
+          phone: prependCountryCode(data.phone),
           password: data.password,
           role: data.role,
         },
       ]),
+    enabled: !!users,
     onError: (err) => toast.error(err.message),
     onSuccess: (data) => {
       toast.success(data.message);
       router.push('/user');
     },
   });
+
+  const registerUsers = async (userss) => {
+    try {
+      await AuthService.register(userss);
+    } catch (error) {
+      toast.error(error.message);
+    }
+  };
 
   const onInputChange = (event) => {
     const file = event.target.files[0];
@@ -75,9 +86,13 @@ export default function RegisterView() {
         }
         userss.push(user);
       }
+      if (!userss.length) {
+        toast.error('Please upload a valid CSV file.');
+        return;
+      }
       setUsers(userss);
+      registerUsers(userss);
     };
-
     reader.readAsText(file);
   };
 
@@ -112,7 +127,7 @@ export default function RegisterView() {
               {...register('phone')}
               sx={{ width: 1 }}
               required
-              inputProps={{ minLength: 10, maxLength: 13 }}
+              inputProps={{ minLength: 10, maxLength: 10 }}
             />
           </Grid>
           <Grid item xs={12} lg={6}>

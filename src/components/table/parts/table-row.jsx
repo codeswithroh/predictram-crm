@@ -28,8 +28,10 @@ export default function BaseTableRow({ rowData = {}, actions, handleClick }) {
   return (
     <>
       <TableRow hover tabIndex={-1}>
-        {rowData?.map((d) => (
-          <TableCell align="left">{d}</TableCell>
+        {rowData?.map((d, idx) => (
+          <TableCell key={idx} align="left">
+            {d}
+          </TableCell>
         ))}
 
         {actions && (

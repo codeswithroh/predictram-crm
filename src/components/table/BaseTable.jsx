@@ -74,8 +74,9 @@ export default function BaseTable({
           <Table sx={{ minWidth: 800 }}>
             <BaseTableHead actions={actions} headLabel={tableDataFormat} />
             <TableBody>
-              {displayData?.map((row) => (
+              {displayData?.map((row, idx) => (
                 <BaseTableRow
+                  key={idx}
                   actions={actions}
                   rowData={row}
                   handleClick={(event) => console.log(row)} // TODO: do something on click of table row

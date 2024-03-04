@@ -1,5 +1,3 @@
-import { useQuery } from '@tanstack/react-query';
-
 import Stack from '@mui/material/Stack';
 import { Avatar, MenuItem } from '@mui/material';
 import Typography from '@mui/material/Typography';
@@ -8,22 +6,9 @@ import Label from 'src/components/label';
 import Iconify from 'src/components/iconify';
 import BaseTable from 'src/components/table/BaseTable';
 
-import UserService from '../../../services/User.service';
-// import { useRouter } from 'src/routes/hooks';
-
 // ----------------------------------------------------------------------
 
-export default function UserTable() {
-  // const router = useRouter();
-
-  const { data } = useQuery({
-    queryKey: ['users'],
-    queryFn: () => {
-      const response = UserService.getUsers();
-      return response;
-    },
-  });
-
+export default function UserTable({ users, filterQuery }) {
   const tableFormat = [
     {
       label: 'First Name',
@@ -36,7 +21,16 @@ export default function UserTable() {
         </Stack>
       ),
     },
-    { label: 'Last Name', accessor: 'lastName' },
+    {
+      label: 'Last Name',
+      accessor: ({ lastName }) => (
+        <Stack direction="row" alignItems="center" spacing={2}>
+          <Typography variant="subtitle2" noWrap>
+            {lastName}
+          </Typography>
+        </Stack>
+      ),
+    },
     { label: 'Phone', accessor: 'phone' },
     { label: 'Email', accessor: 'email' },
     { label: 'Role', accessor: 'role' },
@@ -46,7 +40,6 @@ export default function UserTable() {
       accessor: ({ isPhoneVerified, isEmailVerified }) =>
         isPhoneVerified && isEmailVerified ? 'Yes' : 'No',
     },
-    // { label: 'Verified', accessor: ({ isVerified }) => (isVerified ? 'Yes' : 'No') },
     {
       label: 'IsEnabled',
       accessor: ({ isEnabled }) => (
@@ -57,7 +50,8 @@ export default function UserTable() {
 
   return (
     <BaseTable
-      tableData={data.data}
+      filterQuery={filterQuery}
+      tableData={users}
       tableDataFormat={tableFormat}
       filterables={['lastName', 'email', 'organisation']}
       actions={
