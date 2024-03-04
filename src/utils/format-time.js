@@ -25,3 +25,9 @@ export function fToNow(date) {
       })
     : '';
 }
+
+export function epochToIST(epoch) {
+  const milliseconds = epoch * 1000;
+  const dateInIST = new Date(milliseconds);
+  return dateInIST;
+}

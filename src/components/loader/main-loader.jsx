@@ -2,7 +2,7 @@ import { Container, Typography } from '@mui/material';
 
 import Logo from '../logo';
 
-export default function Loader() {
+export default function MainLoader() {
   return (
     <Container
       sx={{

@@ -34,7 +34,6 @@ export const useSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder.addCase(checkUserAuth.pending, (state) => {
-      console.log('load');
       state.loading = true;
     });
     builder.addCase(checkUserAuth.fulfilled, (state, action) => {

@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 
 // ----------------------------------------------------------------------
 
-export default function TableNoData({ query }) {
+export default function TableNoData({ query, blankTableData = false }) {
   return (
     <TableRow>
       <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
@@ -20,11 +20,15 @@ export default function TableNoData({ query }) {
             Not found
           </Typography>
 
-          <Typography variant="body2">
-            No results found for &nbsp;
-            <strong>&quot;{query}&quot;</strong>.
-            <br /> Try checking for typos or using complete words.
-          </Typography>
+          {blankTableData ? (
+            <Typography>No result found</Typography>
+          ) : (
+            <Typography variant="body2">
+              No results found for &nbsp;
+              <strong>&quot;{query}&quot;</strong>.
+              <br /> Try checking for typos or using complete words.
+            </Typography>
+          )}
         </Paper>
       </TableCell>
     </TableRow>

@@ -10,7 +10,7 @@ const navConfig = [
   {
     title: 'dashboard',
     path: '/',
-    icon: icon('ic_analytics'),
+    icon: icon('ic_dashboard'),
   },
   {
     title: 'user',
@@ -20,28 +20,13 @@ const navConfig = [
   {
     title: 'organization',
     path: '/products',
-    icon: icon('ic_cart'),
+    icon: icon('ic_org'),
   },
   {
     title: 'market call',
-    path: '/blog',
-    icon: icon('ic_blog'),
+    path: '/market-call',
+    icon: icon('ic_market'),
   },
-  // {
-  //   title: 'login',
-  //   path: '/login',
-  //   icon: icon('ic_lock'),
-  // },
-  // {
-  //   title: 'User Registration',
-  //   path: '/user/add',
-  //   icon: icon('ic_lock'),
-  // },
-  // {
-  //   title: 'Not found',
-  //   path: '/404',
-  //   icon: icon('ic_disabled'),
-  // },
 ];
 
 export default navConfig;

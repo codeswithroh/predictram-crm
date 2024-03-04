@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom/client';
 import { Toaster } from 'react-hot-toast';
 import { BrowserRouter } from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { ConfirmProvider } from 'material-ui-confirm';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -22,15 +23,17 @@ store.dispatch(checkUserAuth());
 root.render(
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>
-      <Toaster />
-      <HelmetProvider>
-        <BrowserRouter>
-          <Suspense>
-            <App />
-          </Suspense>
-        </BrowserRouter>
-      </HelmetProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ConfirmProvider>
+        <Toaster />
+        <HelmetProvider>
+          <BrowserRouter>
+            <Suspense>
+              <App />
+            </Suspense>
+          </BrowserRouter>
+        </HelmetProvider>
+        <ReactQueryDevtools initialIsOpen={false} />
+      </ConfirmProvider>
     </QueryClientProvider>
   </Provider>
 );

@@ -15,13 +15,26 @@ import BaseTableHead from './parts/table-head';
 // import TableEmptyRows from './table-empty-rows';
 // import TableNoData from './error/not-found-view';
 import TableNoData from './parts/table-no-data';
+import FetchLoader from '../loader/fetch-loader';
 import BaseTableToolbar from './parts/table-toolbar';
 import { applyFilters, getTableData, applyPagination } from './utils';
 // import { emptyRows, applyFilter, getComparator } from './utils';
 
 // ----------------------------------------------------------------------
 
-export default function BaseTable({ tableData, tableDataFormat, filterables, actions = null }) {
+export default function BaseTable({
+  tableData,
+  tableDataFormat,
+  filterables,
+  actions = null,
+  showPagination = true,
+  loading = false,
+  cardStyle = {},
+  filter = {},
+  setFilter,
+  customPagination = false,
+  customDocCount = 0,
+}) {
   const [page, setPage] = useState(0);
 
   const [query, setQuery] = useState('');
@@ -29,58 +42,76 @@ export default function BaseTable({ tableData, tableDataFormat, filterables, act
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleChangePage = (event, newPage) => {
+    if (customPagination) {
+      setFilter({ ...filter, page: newPage, limit: rowsPerPage });
+    }
     setPage(newPage);
   };
 
   const handleChangeRowsPerPage = (event) => {
+    if (customPagination) {
+      setFilter({ ...filter, page: 0, limit: parseInt(event.target.value, 10) });
+    }
+
     setPage(0);
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
   const handleFilter = (event) => {
     // setPage(0);
-    console.log(event.target.value);
     setQuery(event.target.value);
   };
 
   const filteredData = applyFilters(tableData, query, filterables);
 
-  const paginatedData = applyPagination(filteredData, page, rowsPerPage);
+  const paginatedData = customPagination
+    ? filteredData
+    : applyPagination(filteredData, page, rowsPerPage);
 
   const displayData = getTableData(tableDataFormat, paginatedData);
 
-  const notFound = !filteredData.length && !!query;
+  const notFound = !filteredData?.length && !!query;
 
   return (
-    <Card>
+    <Card sx={{ ...cardStyle }}>
       <BaseTableToolbar filter={query} onFilter={handleFilter} filterables={filterables} />
       <Scrollbar>
-        <TableContainer sx={{ overflow: 'unset' }}>
-          <Table sx={{ minWidth: 800 }}>
-            <BaseTableHead actions={actions} headLabel={tableDataFormat} />
-            <TableBody>
-              {displayData.map((row) => (
-                <BaseTableRow
-                  actions={actions}
-                  rowData={row}
-                  handleClick={(event) => console.log(row)} // TODO: do something on click of table row
-                />
-              ))}
+        {!loading ? (
+          <TableContainer sx={{ overflow: 'unset' }}>
+            <Table sx={{ minWidth: 800 }}>
+              <BaseTableHead actions={actions} headLabel={tableDataFormat} />
 
-              {notFound && <TableNoData query={query} />}
-            </TableBody>
-          </Table>
-        </TableContainer>
+              <TableBody>
+                {displayData?.map((row) => (
+                  <BaseTableRow
+                    actions={actions}
+                    rowData={row}
+                    handleClick={(event) => console.log(row)} // TODO: do something on click of table row
+                  />
+                ))}
+
+                {notFound ||
+                  (displayData.length === 0 && (
+                    <TableNoData query={query} blankTableData={displayData.length === 0} />
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <FetchLoader />
+        )}
       </Scrollbar>
-      <TablePagination
-        page={page}
-        component="div"
-        count={filteredData.length}
-        rowsPerPage={rowsPerPage}
-        onPageChange={handleChangePage}
-        rowsPerPageOptions={[5, 10, 25]}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+      {showPagination && (
+        <TablePagination
+          page={customPagination ? filter?.page : page}
+          component="div"
+          count={customPagination ? customDocCount : filteredData?.length}
+          rowsPerPage={customPagination ? filter?.limit : rowsPerPage}
+          onPageChange={handleChangePage}
+          rowsPerPageOptions={[1, 5, 10, 25]}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      )}
     </Card>
   );
 }
