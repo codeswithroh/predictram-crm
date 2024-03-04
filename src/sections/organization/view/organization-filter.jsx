@@ -1,24 +1,15 @@
-import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { LoadingButton } from '@mui/lab';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import { Card, Stack, Button } from '@mui/material';
+import { Card, Stack } from '@mui/material';
 
-export default function UserFilter({ queryData, filterQuery, setFilterQuery }) {
+export default function OrganizationFilter({ setFilterQuery }) {
   const { register, handleSubmit } = useForm();
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-
-  const handleClearClick = () => {
-    setFilterQuery({ phone: '', email: '' });
-    setPhone('');
-    setEmail('');
-  };
 
   const onSubmit = (data) => {
-    queryData(data);
+    setFilterQuery(data);
   };
 
   return (
@@ -29,7 +20,6 @@ export default function UserFilter({ queryData, filterQuery, setFilterQuery }) {
             Filters
           </Typography>
           <TextField
-            value={phone}
             label="Search phone number"
             name="phone"
             {...register('phone')}
@@ -38,7 +28,6 @@ export default function UserFilter({ queryData, filterQuery, setFilterQuery }) {
             }}
           />
           <TextField
-            value={email}
             label="Search email"
             name="email"
             {...register('email')}
@@ -49,30 +38,8 @@ export default function UserFilter({ queryData, filterQuery, setFilterQuery }) {
           <LoadingButton fullWidth size="large" type="submit" variant="contained" color="inherit">
             Apply
           </LoadingButton>
-          {filterQuery && (
-            <Button
-              variant="outlined"
-              onClick={handleClearClick}
-              fullWidth
-              size="large"
-              color="inherit"
-            >
-              Clear Filter
-            </Button>
-          )}
         </Stack>
       </Card>
     </form>
   );
 }
-
-// UserTableFilter.propTypes = {
-//   tableData: PropTypes.array.isRequired,
-//   filterOptions: PropTypes.shape({
-//     companyName: PropTypes.string.isRequired,
-//     role: PropTypes.string.isRequired,
-//     isVerified: PropTypes.string.isRequired,
-//     status: PropTypes.string.isRequired,
-//   }).isRequired,
-//   onFilterChange: PropTypes.func,
-// };

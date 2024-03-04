@@ -28,7 +28,7 @@ export default function BaseTableHead({
   return (
     <TableHead>
       <TableRow>
-        {headLabel.map((headCell) => (
+        {headLabel?.map((headCell) => (
           <TableCell
             key={headCell.label}
             align={headCell.align || 'left'}

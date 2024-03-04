@@ -1,17 +1,17 @@
 import { Helmet } from 'react-helmet-async';
 
-import { UserView } from 'src/sections/user/view';
+import OrgRegisterView from 'src/sections/organization/form/organization-form';
 
 // ----------------------------------------------------------------------
 
-export default function UserPage() {
+export default function OrgRegistrationPage() {
   return (
     <>
       <Helmet>
-        <title> User </title>
+        <title> Login </title>
       </Helmet>
 
-      <UserView />
+      <OrgRegisterView />
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { isEqual } from 'lodash';
 
 import Card from '@mui/material/Card';
 // import Stack from '@mui/material/Stack';
@@ -62,7 +63,16 @@ export default function BaseTable({
     setQuery(event.target.value);
   };
 
-  const filteredData = applyFilters(tableData, query, filterables);
+  let filteredData;
+  if (filterQuery && !query && !isEqual(filterQuery, { phone: '', email: '' })) {
+    if (filterQuery.email) {
+      filteredData = applyFilters(tableData, filterQuery.email, filterables);
+    } else if (filterQuery.phone) {
+      filteredData = applyFilters(tableData, filterQuery.phone, filterables);
+    }
+  } else {
+    filteredData = applyFilters(tableData, query, filterables);
+  }
 
   const paginatedData = customPagination
     ? filteredData

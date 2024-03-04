@@ -35,3 +35,10 @@ function result(format, key = '.00') {
 
   return isInteger ? format.replace(key, '') : format;
 }
+
+export const prependCountryCode = (number) => {
+  if (number && !number.startsWith('+91')) {
+    return `+91${number}`;
+  }
+  return number;
+};

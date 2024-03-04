@@ -10,8 +10,10 @@ export const ProductsPage = lazy(() => import('src/pages/products'));
 export const IndexPage = lazy(() => import('src/pages/app'));
 export const MarketCallPage = lazy(() => import('src/pages/marketcall/marketcall'));
 export const UserPage = lazy(() => import('src/pages/user/user'));
+export const OrganizationPage = lazy(() => import('src/pages/organization'));
 export const LoginPage = lazy(() => import('src/pages/auth/login'));
 export const UserFormPage = lazy(() => import('src/pages/user/user-form'));
+export const OrgFormPage = lazy(() => import('src/pages/org-register'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
 
 // ----------------------------------------------------------------------
@@ -33,13 +35,17 @@ export default function Router() {
       children: [
         { element: <IndexPage />, index: true },
         { path: 'user', element: <UserPage /> },
-        { path: 'products', element: <ProductsPage /> },
+        { path: 'organization', element: <OrganizationPage /> },
         { path: 'market-call', element: <MarketCallPage /> },
         { path: 'market-call/details/:id', element: <MarketCallDetailsPage /> },
         { path: 'market-call/add', element: <MarketCallFormPage /> },
         {
           path: 'user/add',
           element: <UserFormPage />,
+        },
+        {
+          path: 'organization/add',
+          element: <OrgFormPage />,
         },
       ],
     },
