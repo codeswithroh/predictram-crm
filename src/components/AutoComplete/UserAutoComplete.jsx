@@ -24,7 +24,7 @@ function UserAutocomplete({
     queryKey: ['user-autocomplete', filter],
     queryFn: () => UserService.get(filter),
     select: (res) => res?.data || [],
-    staleTime: 60000 * 10,
+    // staleTime: 60000 * 10,
     enabled,
   });
 
@@ -37,7 +37,7 @@ function UserAutocomplete({
       onChange={onChange}
       value={value}
       name={name ?? 'user'}
-      options={createOptionsFromArr(data?.user || [], labelKey ?? 'name', pickKey ?? 'id')}
+      options={createOptionsFromArr(data?.user || [], labelKey ?? 'firstName', pickKey ?? 'id')}
       lg={lg}
       md={md}
       multiple={multiple}

@@ -26,7 +26,7 @@ const validateFile = (requiredFields, json) => {
   if (!valid) toast.error('Required fields are not present');
 };
 
-function ExcelUploader({ setData, requiredFields }) {
+function FileUploader({ setData, requiredFields = [] }) {
   const [fileSelected, setFileSelected] = useState(false);
   const [fileName, setFileName] = useState('');
   const [fileSize, setFilesize] = useState('');
@@ -34,6 +34,7 @@ function ExcelUploader({ setData, requiredFields }) {
 
   const onSelect = (e) => {
     const reader = new FileReader();
+
     const file = e.target.files[0];
 
     if (!file) return;
@@ -43,15 +44,18 @@ function ExcelUploader({ setData, requiredFields }) {
     setFilesize(formatFileSize(file?.size));
     setFileType(file?.type);
 
-    reader.onload = (event) => {
+    reader.onload = async (event) => {
       let data = [];
       if (file?.type === 'text/csv') {
-        data = csvTOJson(event.target.result);
+        data = await csvTOJson(event.target.result);
       } else {
         data = xlsxToJson(event.target.result);
       }
+      console.log(data);
       setData(data);
-      validateFile(requiredFields, data);
+      if (requiredFields.length > 0) {
+        validateFile(requiredFields, data);
+      }
     };
     if (file?.type === 'text/csv') {
       reader.readAsText(file);
@@ -84,6 +88,9 @@ function ExcelUploader({ setData, requiredFields }) {
     >
       <input
         accept=".xlsx,.csv"
+        onClick={(e) => {
+          e.target.value = '';
+        }}
         type="file"
         style={{ display: 'none' }}
         id="excel-upload"
@@ -125,4 +132,4 @@ function ExcelUploader({ setData, requiredFields }) {
   );
 }
 
-export default ExcelUploader;
+export default FileUploader;

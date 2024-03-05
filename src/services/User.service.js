@@ -6,6 +6,14 @@ class UserService extends ApiService {
   constructor() {
     super(USER_URL);
   }
+
+  linkEmployee(payload) {
+    return this.doPut(`${USER_URL}/employee/LINK`, payload);
+  }
+
+  unlinkEmployee(payload) {
+    return this.doPut(`${USER_URL}/employee/UNLINK`, payload);
+  }
 }
 
 export default new UserService();

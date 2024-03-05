@@ -10,15 +10,17 @@ import { ROLES } from 'src/enums';
 
 import AccessControl from 'src/components/Accesscontrol';
 import RoleAutocomplete from 'src/components/AutoComplete/RoleAutocomplete';
+import UserAutocomplete from 'src/components/AutoComplete/UserAutoComplete';
 import OrganizationAutocomplete from 'src/components/AutoComplete/OrganizationAutoComplete';
 
 export default function UserFilter({ setFilterQuery, filterQuery }) {
   const { register, handleSubmit } = useForm();
   const [role, setRole] = useState('');
   const [organization, setOrganization] = useState('');
+  const [employee, setEmployee] = useState('');
 
   const onSubmit = (data) => {
-    setFilterQuery({ ...filterQuery, ...data, role, organization, page: 0 });
+    setFilterQuery({ ...filterQuery, ...data, role, organization, managedBy: employee, page: 0 });
   };
 
   return (
@@ -36,6 +38,16 @@ export default function UserFilter({ setFilterQuery, filterQuery }) {
             onChange={(_, v) => setRole(v)}
             placeholder="Select Role"
           />
+          <AccessControl accepted_roles={[ROLES.ADMIN]}>
+            <UserAutocomplete
+              placeholder="Managed By"
+              noLabel
+              value={employee}
+              filter={{ role: ROLES.EMPLOYEE }}
+              onChange={(_, v) => setEmployee(v)}
+              labelKey="email"
+            />
+          </AccessControl>
           <AccessControl accepted_roles={[ROLES.SUPER_ADMIN]}>
             <OrganizationAutocomplete
               noLabel

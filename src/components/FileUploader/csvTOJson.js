@@ -1,19 +1,18 @@
-export const csvTOJson = (csvData) => {
-  const lines = csvData.split('\n');
-  const headers = lines[0].split(',');
-  const json = [];
+import Papa from 'papaparse';
 
-  for (let i = 1; i < lines.length; i += 1) {
-    const data = lines[i].split(',');
-    const obj = {};
-    for (let j = 0; j < headers.length; j += 1) {
-      if (data[j] || data[j] === false || data[j] === 0) {
-        obj[headers[j].trim()] = data[j];
-      }
-    }
-    if (Object.keys(obj).length > 0) json.push(obj);
-  }
-
-  console.log(json);
-  return json;
-};
+export const csvTOJson = async (csvData) =>
+  new Promise((resolve, reject) => {
+    Papa.parse(csvData, {
+      header: true,
+      dynamicTyping: true,
+      complete: (results) => {
+        const filteredData = results.data.filter((row) =>
+          Object.values(row).some((value) => value !== null && value !== undefined && value !== '')
+        );
+        resolve(filteredData);
+      },
+      error: (error) => {
+        reject(error);
+      },
+    });
+  });

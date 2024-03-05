@@ -9,8 +9,8 @@ import { ROLES } from 'src/enums';
 import Iconify from 'src/components/iconify';
 import PageHeader from 'src/components/pageHeader';
 import AccessControl from 'src/components/Accesscontrol';
-import AllocateComponent from 'src/components/modal/allocation-modal';
-import DeAllocateComponent from 'src/components/modal/deallocation-modal';
+import AllocateComponent from 'src/components/modal/user/allocation-modal';
+import DeAllocateComponent from 'src/components/modal/user/deallocation-modal';
 
 import UserTable from './user-table';
 import UserFilter from './user-filter';
@@ -35,7 +35,7 @@ export default function UserPage() {
             color="inherit"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            Allocate User
+            Assign Client To Employee
           </Button>
         </AccessControl>
         <AllocateComponent open={allocateOpen} handleClose={handleAllocateClose} />
@@ -47,7 +47,7 @@ export default function UserPage() {
             color="inherit"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
-            De-allocate User
+            Unassign Client from Employee
           </Button>
         </AccessControl>
         <DeAllocateComponent open={deallocateOpen} handleClose={handleDeallocateClose} />
