@@ -13,10 +13,12 @@ export const IndexPage = lazy(() => import('src/pages/app'));
 export const MarketCallPage = lazy(() => import('src/pages/marketcall/marketcall'));
 export const UserPage = lazy(() => import('src/pages/user/user'));
 export const OrganizationPage = lazy(() => import('src/pages/organization'));
-export const LoginPage = lazy(() => import('src/pages/auth/login'));
 export const UserFormPage = lazy(() => import('src/pages/user/user-form'));
 export const OrgFormPage = lazy(() => import('src/pages/org-register'));
 export const Page404 = lazy(() => import('src/pages/page-not-found'));
+export const LoginPage = lazy(() => import('src/pages/auth/login'));
+export const ForgotPasswordPage = lazy(() => import('src/pages/auth/forgot-password'));
+export const ChangePasswordPage = lazy(() => import('src/pages/auth/change-password'));
 
 // ----------------------------------------------------------------------
 
@@ -59,6 +61,14 @@ export default function Router() {
     {
       path: 'login',
       element: !auth ? <LoginPage /> : <Navigate to="/" />,
+    },
+    {
+      path: 'forgot',
+      element: <ForgotPasswordPage />,
+    },
+    {
+      path: 'change',
+      element: <ChangePasswordPage />,
     },
     {
       path: '404',
