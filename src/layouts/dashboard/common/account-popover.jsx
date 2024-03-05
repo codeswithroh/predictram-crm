@@ -113,6 +113,8 @@ export default function AccountPopover() {
           </MenuItem>
         ))} */}
 
+        <MenuItem onClick={() => router.push('/change-password')}>Change Password</MenuItem>
+
         <Divider sx={{ borderStyle: 'dashed', m: 0 }} />
 
         <MenuItem

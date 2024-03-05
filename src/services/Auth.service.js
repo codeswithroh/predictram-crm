@@ -16,4 +16,16 @@ export default class AuthService {
   static async register(payload) {
     return doPost(`${AUTH_URL}/register`, payload);
   }
+
+  static async changePassword(payload) {
+    return doPost(`${AUTH_URL}/change-password`, payload);
+  }
+
+  static async sendOTP(payload) {
+    return doPost(`${AUTH_URL}/send-otp`, payload);
+  }
+
+  static async resetPassword(payload) {
+    return doPost(`${AUTH_URL}/reset-password`, payload);
+  }
 }

@@ -1,8 +1,9 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
+import { NavLink } from 'react-router-dom';
 
 import Box from '@mui/material/Box';
-// import Link from '@mui/material/Link';
+import Link from '@mui/material/Link';
 import Card from '@mui/material/Card';
 import Stack from '@mui/material/Stack';
 // import Button from '@mui/material/Button';
@@ -70,10 +71,10 @@ export default function LoginView() {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 3 }}>
-        {/* <Link variant="subtitle2" underline="hover">
+      <Stack direction="row" alignItems="center" justifyContent="flex-end" sx={{ my: 1 }}>
+        <Link variant="subtitle2" underline="hover" component={NavLink} to="/forgot-password">
           Forgot password?
-        </Link> */}
+        </Link>
       </Stack>
 
       <LoadingButton

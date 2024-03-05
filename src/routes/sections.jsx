@@ -63,11 +63,11 @@ export default function Router() {
       element: !auth ? <LoginPage /> : <Navigate to="/" />,
     },
     {
-      path: 'forgot',
+      path: 'forgot-password',
       element: <ForgotPasswordPage />,
     },
     {
-      path: 'change',
+      path: 'change-password',
       element: <ChangePasswordPage />,
     },
     {
