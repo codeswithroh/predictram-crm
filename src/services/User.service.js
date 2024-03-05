@@ -6,10 +6,6 @@ class UserService extends ApiService {
   constructor() {
     super(USER_URL);
   }
-
-  getUsers() {
-    return this.get();
-  }
 }
 
 export default new UserService();
