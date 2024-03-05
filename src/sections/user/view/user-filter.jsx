@@ -12,13 +12,13 @@ import AccessControl from 'src/components/Accesscontrol';
 import RoleAutocomplete from 'src/components/AutoComplete/RoleAutocomplete';
 import OrganizationAutocomplete from 'src/components/AutoComplete/OrganizationAutoComplete';
 
-export default function UserFilter({ setFilterQuery }) {
+export default function UserFilter({ setFilterQuery, filterQuery }) {
   const { register, handleSubmit } = useForm();
   const [role, setRole] = useState('');
   const [organization, setOrganization] = useState('');
 
   const onSubmit = (data) => {
-    setFilterQuery({ ...data, role });
+    setFilterQuery({ ...filterQuery, ...data, role, organization, page: 0 });
   };
 
   return (

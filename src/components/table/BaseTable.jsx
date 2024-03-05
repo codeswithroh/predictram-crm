@@ -35,11 +35,11 @@ export default function BaseTable({
   customPagination = false,
   customDocCount = 0,
 }) {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(customPagination ? filter?.page : 0);
 
   const [query, setQuery] = useState('');
 
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(customPagination ? filter?.limit : 5);
 
   const handleChangePage = (event, newPage) => {
     if (customPagination) {
@@ -108,7 +108,7 @@ export default function BaseTable({
           count={customPagination ? customDocCount : filteredData?.length}
           rowsPerPage={customPagination ? filter?.limit : rowsPerPage}
           onPageChange={handleChangePage}
-          rowsPerPageOptions={[1, 5, 10, 25]}
+          rowsPerPageOptions={[5, 10, 25]}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       )}

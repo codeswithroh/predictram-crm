@@ -13,7 +13,7 @@ import BaseTable from 'src/components/table/BaseTable';
 
 // ----------------------------------------------------------------------
 
-export default function UserTable({ filterQuery }) {
+export default function UserTable({ filterQuery, setFilterQuery }) {
   const tableFormat = [
     {
       label: 'Name',
@@ -44,10 +44,13 @@ export default function UserTable({ filterQuery }) {
   return (
     <BaseTable
       filter={filterQuery}
-      tableData={data}
+      tableData={data?.user || []}
       loading={isLoading}
       tableDataFormat={tableFormat}
+      setFilter={setFilterQuery}
       filterables={['lastName', 'email']}
+      customDocCount={data?.total}
+      customPagination
       actions={
         <div>
           <MenuItem>
