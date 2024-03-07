@@ -1,14 +1,14 @@
 import { useQuery } from '@tanstack/react-query';
 
+import { Avatar } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { Avatar, MenuItem } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
 import cleanObject from 'src/utils/cleanObject';
 
 import UserService from 'src/services/User.service';
 
-import Iconify from 'src/components/iconify';
+// import Iconify from 'src/components/iconify';
 import BaseTable from 'src/components/table/BaseTable';
 
 // ----------------------------------------------------------------------
@@ -48,22 +48,22 @@ export default function UserTable({ filterQuery, setFilterQuery }) {
       loading={isLoading}
       tableDataFormat={tableFormat}
       setFilter={setFilterQuery}
-      filterables={['lastName', 'email']}
+      filterables={['firstName', 'lastName', 'email']}
       customDocCount={data?.total}
       customPagination
-      actions={
-        <div>
-          <MenuItem>
-            <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-            Edit
-          </MenuItem>
+      // actions={
+      //   <div>
+      //     <MenuItem>
+      //       <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
+      //       Edit
+      //     </MenuItem>
 
-          <MenuItem sx={{ color: 'error.main' }}>
-            <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-            Delete
-          </MenuItem>
-        </div>
-      }
+      //     <MenuItem sx={{ color: 'error.main' }}>
+      //       <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
+      //       Delete
+      //     </MenuItem>
+      //   </div>
+      // }
     />
   );
 }

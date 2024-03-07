@@ -1,15 +1,15 @@
 import toast from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
 
+import { Avatar } from '@mui/material';
 import Stack from '@mui/material/Stack';
-import { Avatar, MenuItem } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
 import cleanObject from 'src/utils/cleanObject';
 
 import OrganizationService from 'src/services/Organization.service';
 
-import Iconify from 'src/components/iconify';
+// import Iconify from 'src/components/iconify';
 import BaseTable from 'src/components/table/BaseTable';
 
 // ----------------------------------------------------------------------
@@ -45,19 +45,19 @@ export default function OrganizationTable({ filterQuery }) {
       loading={isLoading}
       tableDataFormat={tableFormat}
       filterables={['name', 'contact', 'email']}
-      actions={
-        <div>
-          <MenuItem>
-            <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
-            Edit
-          </MenuItem>
+      // actions={
+      //   <div>
+      //     <MenuItem>
+      //       <Iconify icon="eva:edit-fill" sx={{ mr: 2 }} />
+      //       Edit
+      //     </MenuItem>
 
-          <MenuItem sx={{ color: 'error.main' }}>
-            <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
-            Delete
-          </MenuItem>
-        </div>
-      }
+      //     <MenuItem sx={{ color: 'error.main' }}>
+      //       <Iconify icon="eva:trash-2-outline" sx={{ mr: 2 }} />
+      //       Delete
+      //     </MenuItem>
+      //   </div>
+      // }
     />
   );
 }

@@ -27,7 +27,8 @@ export default function ForgotPasswordView() {
   const router = useRouter();
   const { register, handleSubmit } = useForm();
   const [otpSent, setOtpSent] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [timer, setTimer] = useState(10);
   const [resend, setResend] = useState(false);
   const [email, setEmail] = useState('');
@@ -144,12 +145,15 @@ export default function ForgotPasswordView() {
                     name="newPassword"
                     label="New Password"
                     fullWidth
-                    type={showPassword ? 'text' : 'password'}
+                    type={showNewPassword ? 'text' : 'password'}
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                            <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                          <IconButton
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                            edge="end"
+                          >
+                            <Iconify icon={showNewPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
                           </IconButton>
                         </InputAdornment>
                       ),
@@ -160,13 +164,18 @@ export default function ForgotPasswordView() {
                   <TextField
                     name="confirmPassword"
                     label="Confirm Password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showConfirmPassword ? 'text' : 'password'}
                     fullWidth
                     InputProps={{
                       endAdornment: (
                         <InputAdornment position="end">
-                          <IconButton onClick={() => setShowPassword(!showPassword)} edge="end">
-                            <Iconify icon={showPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'} />
+                          <IconButton
+                            onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                            edge="end"
+                          >
+                            <Iconify
+                              icon={showConfirmPassword ? 'eva:eye-fill' : 'eva:eye-off-fill'}
+                            />
                           </IconButton>
                         </InputAdornment>
                       ),

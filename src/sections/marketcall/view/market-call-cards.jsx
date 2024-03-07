@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { useQuery } from '@tanstack/react-query';
+import React, { useState, useEffect } from 'react';
 
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { Box, Card, TablePagination } from '@mui/material';
 
 import cleanObject from 'src/utils/cleanObject';
 
+import SocketService from 'src/services/Socket.service';
 import MarketcallService from 'src/services/Marketcall.service';
 
 import NotFound from 'src/components/Nofound';
@@ -30,7 +32,7 @@ function MarketCallCards({ filter, setFilter }) {
         })
       );
     },
-    refetchInterval: filter?.marketState === 'live' ? 1000 * 15 : 0,
+    // refetchInterval: filter?.marketState === 'live' ? 1000 * 15 : 0,
     select: (res) => res?.data || [],
   });
 
@@ -43,6 +45,16 @@ function MarketCallCards({ filter, setFilter }) {
     setLimit(value);
     setFilter({ ...filter, page: 0, limit: value });
   };
+
+  useEffect(() => {
+    SocketService.connect().catch((e) => toast.error(e.message));
+    SocketService.addEventListener('market-call', (marketCall) => {
+      console.log(marketCall); // TODO: update market call data
+    });
+    return () => {
+      SocketService.disconnect();
+    };
+  }, []);
 
   if (isLoading) return <FetchLoader />;
 
