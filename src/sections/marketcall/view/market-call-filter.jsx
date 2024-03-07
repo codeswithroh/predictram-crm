@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Card, Button } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 
-import { ROLES } from 'src/enums/index';
+import { ROLES, MARKET_CALL_TYPES } from 'src/enums/index';
 
 import Dropdown from 'src/components/dropdown';
 import AccessControl from 'src/components/Accesscontrol';
@@ -22,20 +22,33 @@ export default function MarketCallFilter({ setFilter, filter }) {
   };
   return (
     <Grid2 sx={{ mb: 2 }} container justifyContent="space-between" alignItems="center" gap={3}>
-      {/* <Grid2 > */}
-      <Card sx={{ borderRadius: 1 }}>
-        <Dropdown
-          onChange={(e) => setFilter({ ...filter, marketState: e.target.value, page: 0 })}
-          value={filter?.marketState}
-          options={[
-            { value: 'live', label: 'Live' },
-            { value: 'ended', label: 'Ended' },
-          ]}
-          label="Choose market type"
-          nolabel
-        />
-      </Card>
-      {/* </Grid2> */}
+      <Grid2 sx={{ display: 'flex' }} gap={0.5}>
+        <Card sx={{ borderRadius: 1 }}>
+          <Dropdown
+            onChange={(e) => setFilter({ ...filter, marketState: e.target.value, page: 0 })}
+            value={filter?.marketState}
+            options={[
+              { value: 'live', label: 'Live' },
+              { value: 'ended', label: 'Ended' },
+            ]}
+            label="Choose market state"
+            nolabel
+          />
+        </Card>
+        <Card sx={{ borderRadius: 1, display: 'flex', gap: '0.5rem' }}>
+          <Dropdown
+            // onChange={(e) => setFilter({ ...filter, marketState: e.target.value, page: 0 })}
+            value="INTRADAY"
+            options={[
+              { value: MARKET_CALL_TYPES.INTRADAY, label: 'Intraday' },
+              { value: MARKET_CALL_TYPES.SHORT_TERM, label: 'Short term' },
+              { value: MARKET_CALL_TYPES.LONG_TERM, label: 'Long term' },
+            ]}
+            label="Choose market type"
+            nolabel
+          />
+        </Card>
+      </Grid2>
 
       <Grid2
         md={6}
