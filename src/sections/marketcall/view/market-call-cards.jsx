@@ -32,7 +32,6 @@ function MarketCallCards({ filter, setFilter }) {
         })
       );
     },
-    // refetchInterval: filter?.marketState === 'live' ? 1000 * 15 : 0,
     select: (res) => res?.data || [],
   });
 

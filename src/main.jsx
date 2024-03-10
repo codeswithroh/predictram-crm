@@ -8,6 +8,10 @@ import { ConfirmProvider } from 'material-ui-confirm';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
+import { LocalizationProvider } from '@mui/x-date-pickers';
+// If you are using date-fns v2.x, please import `AdapterDateFns`
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+
 import App from './app';
 import { store } from './redux/store';
 import { checkUserAuth } from './redux/reducer/user.reducer';
@@ -23,17 +27,19 @@ store.dispatch(checkUserAuth());
 root.render(
   <Provider store={store}>
     <QueryClientProvider client={queryClient}>
-      <ConfirmProvider>
-        <Toaster />
-        <HelmetProvider>
-          <BrowserRouter>
-            <Suspense>
-              <App />
-            </Suspense>
-          </BrowserRouter>
-        </HelmetProvider>
-        <ReactQueryDevtools initialIsOpen={false} />
-      </ConfirmProvider>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <ConfirmProvider>
+          <Toaster />
+          <HelmetProvider>
+            <BrowserRouter>
+              <Suspense>
+                <App />
+              </Suspense>
+            </BrowserRouter>
+          </HelmetProvider>
+          <ReactQueryDevtools initialIsOpen={false} />
+        </ConfirmProvider>
+      </LocalizationProvider>
     </QueryClientProvider>
   </Provider>
 );

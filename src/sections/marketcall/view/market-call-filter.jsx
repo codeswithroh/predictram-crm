@@ -4,6 +4,8 @@ import { useSelector } from 'react-redux';
 import { Card, Button } from '@mui/material';
 import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 
+import { useRouter } from 'src/routes/hooks';
+
 import { ROLES, MARKET_CALL_TYPES } from 'src/enums/index';
 
 import Dropdown from 'src/components/dropdown';
@@ -12,6 +14,7 @@ import UserAutocomplete from 'src/components/AutoComplete/UserAutoComplete';
 import OrganizationAutocomplete from 'src/components/AutoComplete/OrganizationAutoComplete';
 
 export default function MarketCallFilter({ setFilter, filter }) {
+  const router = useRouter();
   const [organization, setOrganization] = useState('');
   const [createdBy, setCreatedBy] = useState('');
   const user = useSelector((state) => state?.user?.details);
@@ -23,28 +26,34 @@ export default function MarketCallFilter({ setFilter, filter }) {
   return (
     <Grid2 sx={{ mb: 2 }} container justifyContent="space-between" alignItems="center" gap={3}>
       <Grid2 sx={{ display: 'flex' }} gap={0.5}>
+        <Card sx={{ borderRadius: 1, display: 'flex', gap: '0.5rem' }}>
+          <Dropdown
+            onChange={(e) => {
+              setFilter({ ...filter, type: e.target.value, page: 0 });
+              router.push(`/market-call/${e.target.value}/${filter?.marketState}`);
+            }}
+            value={filter?.type}
+            options={Object.keys(MARKET_CALL_TYPES).map((key) => ({
+              value: key,
+              label: MARKET_CALL_TYPES[key],
+            }))}
+            label="Choose market type"
+            nolabel
+          />
+        </Card>
+
         <Card sx={{ borderRadius: 1 }}>
           <Dropdown
-            onChange={(e) => setFilter({ ...filter, marketState: e.target.value, page: 0 })}
+            onChange={(e) => {
+              setFilter({ ...filter, marketState: e.target.value, page: 0 });
+              router.push(`/market-call/${filter.type}/${e.target.value}`);
+            }}
             value={filter?.marketState}
             options={[
               { value: 'live', label: 'Live' },
               { value: 'ended', label: 'Ended' },
             ]}
             label="Choose market state"
-            nolabel
-          />
-        </Card>
-        <Card sx={{ borderRadius: 1, display: 'flex', gap: '0.5rem' }}>
-          <Dropdown
-            // onChange={(e) => setFilter({ ...filter, marketState: e.target.value, page: 0 })}
-            value="INTRADAY"
-            options={[
-              { value: MARKET_CALL_TYPES.INTRADAY, label: 'Intraday' },
-              { value: MARKET_CALL_TYPES.SHORT_TERM, label: 'Short term' },
-              { value: MARKET_CALL_TYPES.LONG_TERM, label: 'Long term' },
-            ]}
-            label="Choose market type"
             nolabel
           />
         </Card>

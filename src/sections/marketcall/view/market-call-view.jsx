@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
@@ -18,7 +19,13 @@ import MarketCallFilter from './market-call-filter';
 
 export default function BlogView() {
   const router = useRouter();
-  const [filter, setFilter] = useState({ marketState: 'live', page: 0, limit: 5 });
+  const { marketState, type } = useParams();
+  const [filter, setFilter] = useState({
+    marketState: marketState || 'live',
+    page: 0,
+    limit: 5,
+    type: type || 'INTRADAY',
+  });
 
   return (
     <Container sx={{ mt: 3 }}>

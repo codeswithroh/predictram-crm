@@ -1,5 +1,5 @@
+import { isAfter } from 'date-fns';
 import PropTypes from 'prop-types';
-import { useQuery } from '@tanstack/react-query';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -11,44 +11,34 @@ import Typography from '@mui/material/Typography';
 import { useRouter } from 'src/routes/hooks';
 
 import { fDate } from 'src/utils/format-time';
-import { createChatData } from 'src/utils/createChartData';
+import { paisaToRupees } from 'src/utils/convert';
 
-import MarketdataService from 'src/services/Marketdata.service';
-
-import StockChart from 'src/components/chart/StockChart';
-import FetchLoader from 'src/components/loader/fetch-loader';
+import { MARKET_CALL_TYPES } from 'src/enums';
 
 // ----------------------------------------------------------------------
 
-const convertStocksToTitle = (stockData, isLive) => {
-  const symbols = stockData.map((stock) => `${stock?.symbol} ${stock.type} call`).join(',');
+const convertStocksToTitle = (stockData) => {
+  const symbols = stockData.map((stock) => `${stock?.symbol} ${stock.type} CALL`).join(',');
 
-  return isLive ? `Checkout New Call , Consist of ${symbols} ` : `This Call consist ${symbols}`;
+  return symbols;
 };
 
+// const callColor = {
+//   INTRADAY: '#3FADFC',
+//   SHORT_TERM: '#03A069',
+//   LONG_TERM: '#8466F1',
+// };
+
 export default function MarketCallCard({ marketCall, buttonText }) {
-  const { createdAt, stockData, isLive, id, createdBy } = marketCall;
-
+  const { endDate, stockData, id, createdBy, image, type, targetPrice, stopLossPrice } = marketCall;
+  const isLive = isAfter(new Date(endDate), new Date());
   const router = useRouter();
-
-  const { data, isLoading } = useQuery({
-    queryKey: ['history-price', id, stockData[0]?.symbol],
-    queryFn: () =>
-      MarketdataService.history(
-        stockData[0]?.symbol,
-        '1',
-        fDate(new Date(isLive ? new Date() : marketCall?.createdAt), 'yyyy-MM-dd'),
-        fDate(new Date(isLive ? new Date() : marketCall?.createdAt), 'yyyy-MM-dd')
-      ),
-    select: (res) => res?.data?.candles || [],
-  });
-
-  const chartData = createChatData(data);
 
   const renderTitle = (
     <Link
       color="inherit"
       variant="subtitle2"
+      fontWeight="bold"
       underline="hover"
       sx={{
         overflow: 'hidden',
@@ -57,40 +47,64 @@ export default function MarketCallCard({ marketCall, buttonText }) {
         WebkitBoxOrient: 'vertical',
       }}
     >
-      {convertStocksToTitle(stockData, isLive)}
+      {convertStocksToTitle(stockData)}
     </Link>
   );
 
-  const renderGraph = isLoading ? (
-    <FetchLoader />
-  ) : (
-    <StockChart data={chartData || []} height={200} tooltip={false} />
+  const renderImage = (
+    <Box display="flex" justifyContent="center" alignItems="center" bgcolor="#DCDEEE" p={2}>
+      {image ? (
+        <Box>
+          <img src={image} alt="market-call" height={200} />
+        </Box>
+      ) : (
+        <Box height={200} display="flex" s alignItems="center" textAlign="center">
+          <Typography variant="h5">{`${MARKET_CALL_TYPES[type]} call for ${stockData[0]?.symbol}`}</Typography>
+        </Box>
+      )}
+    </Box>
   );
 
   const renderDate = (
-    <Typography
-      variant="caption"
-      component="div"
-      sx={{
-        mb: 2,
-        color: 'text.disabled',
-      }}
-    >
-      {fDate(createdAt)}
-    </Typography>
+    <Box bgcolor="#212322" color="white" borderRadius={2} mt={1} px={2} mr={1}>
+      <Typography
+        variant="caption"
+        component="div"
+        sx={{
+          mb: 2,
+          // color: 'text.disabled',
+        }}
+      >
+        {`${isLive ? 'Ends' : 'Ended'} on ${fDate(endDate, 'd MMMM yyyy HH:mm')}`}
+      </Typography>
+    </Box>
+  );
+
+  const renderStatus = (
+    <Box bgcolor={isLive ? 'green' : 'gray'} color="white" borderRadius={2} px={2} mt={0.5}>
+      <Typography>{isLive ? 'Live' : 'Ended'}</Typography>
+    </Box>
   );
 
   const renderCreatedBy = (
-    <Typography
-      variant="caption"
-      component="div"
-      sx={{
-        mb: 2,
-        color: 'text.disabled',
-      }}
-    >
+    <Typography variant="caption" component="div">
       {`${createdBy.firstName} ${createdBy.lastName}`}
     </Typography>
+  );
+
+  const CallType = (
+    <Box bgcolor="#212322" borderRadius={2} color="white" textAlign="center">
+      <Typography px={2}>{MARKET_CALL_TYPES[type]}</Typography>
+    </Box>
+  );
+
+  const PriceInfo = (
+    <Box>
+      <Typography>Target Price :- {paisaToRupees(targetPrice)}</Typography>
+      {type === 'INTRADAY' && (
+        <Typography>Stop Loss Price :- {paisaToRupees(stopLossPrice)}</Typography>
+      )}
+    </Box>
   );
 
   const renderButton = (
@@ -110,24 +124,27 @@ export default function MarketCallCard({ marketCall, buttonText }) {
         <Box
           sx={{
             position: 'relative',
-            pt: 2,
+            // pt: 2,
           }}
         >
-          {renderGraph}
+          {renderImage}
+
+          <Box sx={{ position: 'absolute', top: 0, right: 0, p: 2 }}>{renderDate}</Box>
+          <Box sx={{ position: 'absolute', top: 0, left: 0, p: 2 }}>{renderStatus}</Box>
         </Box>
 
         <Stack
           sx={{
-            p: (theme) => theme.spacing(0, 3, 3, 3),
+            p: (theme) => theme.spacing(2, 2, 2, 2),
           }}
         >
-          <Stack direction="row" justifyContent="space-between">
-            {renderDate}
-
+          <Stack direction="row" justifyContent="space-between" alignItems="start" mb={1}>
+            {CallType}
             {renderCreatedBy}
           </Stack>
 
           {renderTitle}
+          {PriceInfo}
 
           {renderButton}
         </Stack>

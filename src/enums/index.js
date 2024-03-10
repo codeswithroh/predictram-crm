@@ -1,11 +1,11 @@
 export const ROLES = {
   SUPER_ADMIN: 'SUPER_ADMIN',
   ADMIN: 'ADMIN',
-  INTRADAY: 'EMPLOYEE',
+  EMPLOYEE: 'EMPLOYEE',
   CLIENT: 'CLIENT',
 };
 export const MARKET_CALL_TYPES = {
-  SHORT_TERM: 'SHORT_TERM',
-  LONG_TERM: 'LONG_TERM',
-  INTRADAY: 'INTRADAY',
+  INTRADAY: 'Intra Day',
+  SHORT_TERM: 'Short Term',
+  LONG_TERM: 'Long Term',
 };

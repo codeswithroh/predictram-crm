@@ -30,8 +30,8 @@ export default function Router() {
   const prodectedRoutes = [
     { path: 'user', element: <UserPage /> },
     { path: 'organization', element: <OrganizationPage /> },
-    { path: 'market-call', element: <MarketCallPage /> },
-    { path: 'market-call/details/:id', element: <MarketCallDetailsPage /> },
+    { path: 'market-call/:type?/:marketState?', element: <MarketCallPage /> },
+    { path: 'market-call/details/:id/:response?', element: <MarketCallDetailsPage /> },
     { path: 'market-call/add', element: <MarketCallFormPage /> },
     {
       path: 'user/add',

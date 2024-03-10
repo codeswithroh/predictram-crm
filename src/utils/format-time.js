@@ -1,4 +1,4 @@
-import { format, getTime, formatDistanceToNow } from 'date-fns';
+import { format, getTime, setHours, setMinutes, setSeconds, formatDistanceToNow } from 'date-fns';
 
 // ----------------------------------------------------------------------
 
@@ -30,4 +30,12 @@ export function epochToIST(epoch) {
   const milliseconds = epoch * 1000;
   const dateInIST = new Date(milliseconds);
   return dateInIST;
+}
+
+export function convetToMarketCloseTime(date) {
+  return setSeconds(setMinutes(setHours(date || new Date(), 15), 30), 0);
+}
+
+export function convetToMarketOpenTime(date) {
+  return setSeconds(setMinutes(setHours(date || new Date(), 9), 15), 0);
 }

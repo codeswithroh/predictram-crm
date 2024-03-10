@@ -1,36 +1,47 @@
-import dayjs from 'dayjs';
 import { useState } from 'react';
+import { isAfter } from 'date-fns';
 import toast from 'react-hot-toast';
+import { useConfirm } from 'material-ui-confirm';
 import { useMutation } from '@tanstack/react-query';
 
 import { LoadingButton } from '@mui/lab';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { Box, Grid, Card, Divider, Container, TextField, Typography } from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
+
+import cleanObject from 'src/utils/cleanObject';
+import { fDateTime, convetToMarketCloseTime } from 'src/utils/format-time';
 
 import { MARKET_CALL_TYPES } from 'src/enums/index';
 import MarketcallService from 'src/services/Marketcall.service';
 
 import PageHeader from 'src/components/pageHeader';
+import ImageUploader from 'src/components/ImageUploader/image-uploader';
 import EnumAutocomplete from 'src/components/AutoComplete/EnumAutoComplete';
+import MarketCallAutoComplete from 'src/components/AutoComplete/MarketCallAutoComplete';
+
+const confirmObj = (title, description, confirmationText) => ({
+  title: <h3 style={{ margin: 0 }}>{title}</h3>,
+  description: <h4 style={{ margin: 0 }}>{description}</h4>,
+  cancellationButtonProps: { variant: 'contained', color: 'error' },
+  confirmationButtonProps: { variant: 'contained', color: 'success' },
+  confirmationText,
+});
 
 function MarketCalForm() {
-  const currentDate = dayjs();
-
+  const confirm = useConfirm();
   const [symbol, setSymbol] = useState('');
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState('');
   const [type, setType] = useState('');
   const [marketcallType, setMarketcallType] = useState('');
-  const [startDate, setStartDate] = useState(currentDate);
-  const [endDate, setEndDate] = useState(currentDate);
+  // const [startDate, setStartDate] = useState(currentDate);
+  // const [startTime, setStartTime] = useState('');
+  const [endDate, setEndDate] = useState(null);
   const [stopLossPrice, setStopLossPrice] = useState('');
   const [buyPrice, setBuyPrice] = useState('');
   const [targetPrice, setTargetPrice] = useState('');
+  const [image, setImage] = useState('');
 
   const router = useRouter();
 
@@ -39,43 +50,49 @@ function MarketCalForm() {
     onError: (err) => toast.error(err.message),
     onSuccess: () => router.back(),
   });
-  const onSubmit = (e) => {
+
+  async function onSubmit(e) {
     e.preventDefault();
-    if (
-      !symbol ||
-      !quantity ||
-      !type ||
-      !marketcallType ||
-      !buyPrice ||
-      !targetPrice ||
-      !startDate ||
-      !endDate
-    ) {
-      toast.error('Please fill in all required fields.');
-      return;
-    }
+
     const data = {
+      image,
       stockData: [{ symbol, quantity, type }],
       type: marketcallType,
-      buyPrice,
-      targetPrice,
+      buyPrice: buyPrice * 100,
+      targetPrice: buyPrice * 100,
+      startDate: new Date(),
     };
 
-    if (marketcallType === 'SHORT_TERM' || marketcallType === 'INTRADAY') {
-      data.startDate = startDate.$d;
-      data.endDate = endDate.$d;
+    if (marketcallType === 'INTRADAY') {
+      data.endDate = convetToMarketCloseTime();
+    } else {
+      data.endDate = convetToMarketCloseTime(endDate);
     }
 
     if (stopLossPrice) {
-      data.stopLossPrice = stopLossPrice;
+      data.stopLossPrice = stopLossPrice * 100;
     }
 
-    mutate(data);
-  };
+    // TODO: Uncomment in prod
+    if (isAfter(data.startDate, convetToMarketCloseTime())) {
+      toast.error('Market is closed try between 9:15 AM and 3:30 PM');
+    } else {
+      await confirm(
+        confirmObj(
+          `Are you sure you want to create this market call ?`,
+          `This call will be live from now and will end on ${fDateTime(data.endDate)}`,
+          `Yes, Create`
+        )
+      );
+      mutate(cleanObject(data));
+    }
+  }
 
   const renderForm = (
     <form onSubmit={onSubmit}>
-      <Box sx={{ flexGrow: 1, px: 3, pt: 2 }}>
+      <Box sx={{ flexGrow: 1, px: 3, pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
+        <ImageUploader setImage={setImage} />
+        <Typography fontWeight="bold">Enter Stock Details*</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} lg={6}>
             <EnumAutocomplete
@@ -91,9 +108,10 @@ function MarketCalForm() {
           <Grid item xs={12} lg={6}>
             <TextField
               placeholder="Enter Stock quantity"
+              label="Stock Quantity"
               value={quantity}
               sx={{ width: 1 }}
-              type="number"
+              type="text"
               required
               onChange={(e) => setQuantity(e.target.value)}
             />
@@ -109,81 +127,25 @@ function MarketCalForm() {
               onChange={(_, v) => setType(v)}
             />
           </Grid>
+        </Grid>
+
+        <Typography fontWeight="bold">Enter Call Details</Typography>
+        <Grid container spacing={2}>
           <Grid item xs={12} lg={6}>
-            <EnumAutocomplete
-              ENUM={[
-                MARKET_CALL_TYPES.INTRADAY,
-                MARKET_CALL_TYPES.SHORT_TERM,
-                MARKET_CALL_TYPES.LONG_TERM,
-              ]}
+            <MarketCallAutoComplete
               name="marketcallType"
-              label="Choose Market Call Type"
               placeholder="Choose Market Call Type"
               value={marketcallType}
               noLabel
               onChange={(_, v) => setMarketcallType(v)}
             />
           </Grid>
-          {marketcallType === 'SHORT_TERM' && (
-            <Grid item xs={12} lg={6}>
-              <DemoContainer components={['DatePicker']}>
-                <DatePicker
-                  label="Start Date"
-                  sx={{ width: 1 }}
-                  value={startDate}
-                  onChange={(sd) => setStartDate(sd)}
-                  format="DD/MM/YYYY"
-                  required
-                />
-              </DemoContainer>
-            </Grid>
-          )}
-          {marketcallType === 'INTRADAY' && (
-            <Grid item xs={12} lg={6}>
-              <DemoContainer components={['DateTimePicker']}>
-                <DateTimePicker
-                  label="Start Date Time"
-                  sx={{ width: 1 }}
-                  value={startDate}
-                  onChange={(st) => setStartDate(st)}
-                  format="LLL"
-                  required
-                />
-              </DemoContainer>
-            </Grid>
-          )}
-          {marketcallType === 'SHORT_TERM' && (
-            <Grid item xs={12} lg={6}>
-              <DemoContainer components={['DatePicker']}>
-                <DatePicker
-                  label="End Date"
-                  sx={{ width: 1 }}
-                  value={endDate}
-                  onChange={(sd) => setEndDate(sd)}
-                  format="DD/MM/YYYY"
-                  required
-                />
-              </DemoContainer>
-            </Grid>
-          )}
-          {marketcallType === 'INTRADAY' && (
-            <Grid item xs={12} lg={6}>
-              <DemoContainer components={['DateTimePicker']}>
-                <DateTimePicker
-                  label="End Date Time"
-                  sx={{ width: 1 }}
-                  value={endDate}
-                  onChange={(st) => setEndDate(st)}
-                  format="LLL"
-                  required
-                />
-              </DemoContainer>
-            </Grid>
-          )}
           <Grid item xs={12} lg={6}>
             <TextField
               placeholder="Enter Stop Loss Price"
+              label="Stop Loss Price"
               value={stopLossPrice}
+              required={marketcallType === MARKET_CALL_TYPES.INTRADAY}
               sx={{ width: 1 }}
               onChange={(e) => setStopLossPrice(e.target.value)}
             />
@@ -191,6 +153,7 @@ function MarketCalForm() {
           <Grid item xs={12} lg={6}>
             <TextField
               placeholder="Enter Buy Price"
+              label="Buy Price"
               value={buyPrice}
               sx={{ width: 1 }}
               onChange={(e) => setBuyPrice(e.target.value)}
@@ -200,12 +163,26 @@ function MarketCalForm() {
           <Grid item xs={12} lg={6}>
             <TextField
               placeholder="Enter Target Price"
+              label="Target Price"
               value={targetPrice}
               sx={{ width: 1 }}
               onChange={(e) => setTargetPrice(e.target.value)}
               required
             />
           </Grid>
+
+          {marketcallType !== 'INTRADAY' && !!marketcallType && (
+            <Grid item xs={12} lg={6}>
+              <DatePicker
+                label="End Date"
+                sx={{ width: 1 }}
+                value={endDate}
+                minDate={new Date()}
+                onChange={(sd) => setEndDate(sd)}
+                required={marketcallType !== 'INTRADAY'}
+              />
+            </Grid>
+          )}
         </Grid>
         <LoadingButton
           fullWidth
@@ -228,7 +205,7 @@ function MarketCalForm() {
       <Card>
         <Typography sx={{ fontWeight: 'bold', p: 3 }}>Add Market Call Form</Typography>
         <Divider />
-        <LocalizationProvider dateAdapter={AdapterDayjs}>{renderForm}</LocalizationProvider>
+        {renderForm}
       </Card>
     </Container>
   );

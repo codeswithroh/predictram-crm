@@ -19,6 +19,7 @@
     "vite:build": "vite build"
   },
   "dependencies": {
+    "@azure/storage-blob": "^12.17.0",
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@faker-js/faker": "^8.1.0",
@@ -31,11 +32,13 @@
     "@tanstack/react-query-devtools": "^5.24.1",
     "apexcharts": "^3.46.0",
     "axios": "^1.6.7",
+    "browser-image-compression": "^2.0.2",
     "date-fns": "^2.30.0",
     "dayjs": "^1.11.10",
     "history": "^5.3.0",
     "lodash": "^4.17.21",
     "material-ui-confirm": "^3.0.11",
+    "moment-timezone": "^0.5.45",
     "numeral": "^2.0.6",
     "papaparse": "^5.4.1",
     "prop-types": "^15.8.1",

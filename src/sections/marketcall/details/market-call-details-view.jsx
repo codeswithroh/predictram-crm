@@ -1,6 +1,9 @@
 import { useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import { Container } from '@mui/material';
+
+import { useRouter } from 'src/routes/hooks';
 
 import { ROLES } from 'src/enums';
 
@@ -13,12 +16,14 @@ import MarketCallDetails from 'src/sections/marketcall/details/market-call-detai
 import MarketCallResponse from './market-call-response';
 
 export default function MarketCallDetailsViewPage() {
-  const [currentTab, setCurrentTab] = useState('details');
+  const { id, response } = useParams();
+  const router = useRouter();
+  const [currentTab, setCurrentTab] = useState(response || '');
   const tabConfig = [
-    { index: 'details', label: 'Details' },
+    { index: '', label: 'Details' },
     { index: 'response', label: 'Response' },
   ];
-  console.log(ROLES);
+
   return (
     <Container sx={{ mt: 3 }}>
       <PageHeader title="Market Call Details" />
@@ -26,12 +31,15 @@ export default function MarketCallDetailsViewPage() {
         <Tabs
           sx={{ mb: 1 }}
           currentTab={currentTab}
-          setCurrentTab={setCurrentTab}
+          setCurrentTab={(d) => {
+            router.push(`/market-call/details/${id}/${d}`);
+            setCurrentTab(d);
+          }}
           tabConfig={tabConfig}
         />
       </AccessControl>
 
-      {currentTab === 'details' && <MarketCallDetails />}
+      {currentTab === '' && <MarketCallDetails />}
       {currentTab === 'response' && <MarketCallResponse />}
     </Container>
   );
