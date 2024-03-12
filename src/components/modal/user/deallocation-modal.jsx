@@ -65,7 +65,7 @@ const DeAllocateComponent = ({ open, handleClose }) => {
             placeholder="Select Employee.."
             noLabel
             name="createdBy"
-            labelKey="firstName"
+            labelKey="email"
             value={employee}
             filter={{
               role: ROLES.EMPLOYEE,

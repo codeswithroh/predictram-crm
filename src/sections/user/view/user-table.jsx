@@ -6,9 +6,11 @@ import Typography from '@mui/material/Typography';
 
 import cleanObject from 'src/utils/cleanObject';
 
+import { ROLES, CLIENT_TYPE } from 'src/enums';
 import UserService from 'src/services/User.service';
 
 // import Iconify from 'src/components/iconify';
+
 import BaseTable from 'src/components/table/BaseTable';
 
 // ----------------------------------------------------------------------
@@ -33,6 +35,15 @@ export default function UserTable({ filterQuery, setFilterQuery }) {
     { label: 'Phone', accessor: 'phone' },
     { label: 'Email', accessor: 'email' },
     { label: 'Role', accessor: 'role' },
+    {
+      label: 'Client Type',
+      accessor: ({ client_type, role }) => {
+        if (role === ROLES.CLIENT) {
+          return CLIENT_TYPE[client_type];
+        }
+        return '-';
+      },
+    },
   ];
 
   const { data = [], isLoading } = useQuery({

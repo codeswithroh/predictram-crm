@@ -2,15 +2,16 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { LoadingButton } from '@mui/lab';
-import { Card, Stack } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
+import { Card, Stack, Collapse } from '@mui/material';
 
 import { ROLES } from 'src/enums';
 
 import AccessControl from 'src/components/Accesscontrol';
 import RoleAutocomplete from 'src/components/AutoComplete/RoleAutocomplete';
 import UserAutocomplete from 'src/components/AutoComplete/UserAutoComplete';
+import ClientTypeAutocomplete from 'src/components/AutoComplete/ClientTypeAutocomplete';
 import OrganizationAutocomplete from 'src/components/AutoComplete/OrganizationAutoComplete';
 
 export default function UserFilter({ setFilterQuery, filterQuery }) {
@@ -18,9 +19,18 @@ export default function UserFilter({ setFilterQuery, filterQuery }) {
   const [role, setRole] = useState('');
   const [organization, setOrganization] = useState('');
   const [employee, setEmployee] = useState('');
+  const [client_type, setClientType] = useState('');
 
   const onSubmit = (data) => {
-    setFilterQuery({ ...filterQuery, ...data, role, organization, managedBy: employee, page: 0 });
+    setFilterQuery({
+      ...filterQuery,
+      ...data,
+      role,
+      organization,
+      managedBy: employee,
+      client_type,
+      page: 0,
+    });
   };
 
   return (
@@ -38,6 +48,14 @@ export default function UserFilter({ setFilterQuery, filterQuery }) {
             onChange={(_, v) => setRole(v)}
             placeholder="Select Role"
           />
+          <Collapse in={role === ROLES.CLIENT}>
+            <ClientTypeAutocomplete
+              noLabel
+              value={client_type}
+              onChange={(_, v) => setClientType(v)}
+              placeholder="Client Type"
+            />
+          </Collapse>
           <AccessControl accepted_roles={[ROLES.ADMIN]}>
             <UserAutocomplete
               placeholder="Managed By"

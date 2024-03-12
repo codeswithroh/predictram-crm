@@ -6,7 +6,7 @@ import Container from '@mui/material/Container';
 
 import { useRouter } from 'src/routes/hooks';
 
-import { ROLES } from 'src/enums';
+import { ROLES, MARKET_CALL_TYPES_SERVER } from 'src/enums';
 
 import Iconify from 'src/components/iconify';
 import PageHeader from 'src/components/pageHeader';
@@ -24,7 +24,7 @@ export default function BlogView() {
     marketState: marketState || 'live',
     page: 0,
     limit: 5,
-    type: type || 'INTRADAY',
+    type: type || MARKET_CALL_TYPES_SERVER.INTRADAY,
   });
 
   return (

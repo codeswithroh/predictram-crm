@@ -1,21 +1,31 @@
 import { useState } from 'react';
-import { isAfter } from 'date-fns';
+// import { isAfter } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useConfirm } from 'material-ui-confirm';
 import { useMutation } from '@tanstack/react-query';
 
 import { LoadingButton } from '@mui/lab';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { Box, Grid, Card, Divider, Container, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Grid,
+  Card,
+  Divider,
+  Container,
+  TextField,
+  Typography,
+  InputAdornment,
+} from '@mui/material';
 
 import { useRouter } from 'src/routes/hooks';
 
 import cleanObject from 'src/utils/cleanObject';
 import { fDateTime, convetToMarketCloseTime } from 'src/utils/format-time';
 
-import { MARKET_CALL_TYPES } from 'src/enums/index';
 import MarketcallService from 'src/services/Marketcall.service';
+import { MARKET_CALL_TYPES, MARKET_CALL_TYPES_SERVER } from 'src/enums/index';
 
+import Iconify from 'src/components/iconify';
 import PageHeader from 'src/components/pageHeader';
 import ImageUploader from 'src/components/ImageUploader/image-uploader';
 import EnumAutocomplete from 'src/components/AutoComplete/EnumAutoComplete';
@@ -63,7 +73,7 @@ function MarketCalForm() {
       startDate: new Date(),
     };
 
-    if (marketcallType === 'INTRADAY') {
+    if (marketcallType === MARKET_CALL_TYPES_SERVER.INTRADAY) {
       data.endDate = convetToMarketCloseTime();
     } else {
       data.endDate = convetToMarketCloseTime(endDate);
@@ -74,18 +84,18 @@ function MarketCalForm() {
     }
 
     // TODO: Uncomment in prod
-    if (isAfter(data.startDate, convetToMarketCloseTime())) {
-      toast.error('Market is closed try between 9:15 AM and 3:30 PM');
-    } else {
-      await confirm(
-        confirmObj(
-          `Are you sure you want to create this market call ?`,
-          `This call will be live from now and will end on ${fDateTime(data.endDate)}`,
-          `Yes, Create`
-        )
-      );
-      mutate(cleanObject(data));
-    }
+    // if (isAfter(data.startDate, convetToMarketCloseTime())) {
+    //   toast.error('Market is closed try between 9:15 AM and 3:30 PM');
+    // } else {
+    await confirm(
+      confirmObj(
+        `Are you sure you want to create this market call ?`,
+        `This call will be live from now and will end on ${fDateTime(data.endDate)}`,
+        `Yes, Create`
+      )
+    );
+    mutate(cleanObject(data));
+    // }
   }
 
   const renderForm = (
@@ -147,6 +157,13 @@ function MarketCalForm() {
               value={stopLossPrice}
               required={marketcallType === MARKET_CALL_TYPES.INTRADAY}
               sx={{ width: 1 }}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="mdi:currency-inr" />
+                  </InputAdornment>
+                ),
+              }}
               onChange={(e) => setStopLossPrice(e.target.value)}
             />
           </Grid>
@@ -157,6 +174,13 @@ function MarketCalForm() {
               value={buyPrice}
               sx={{ width: 1 }}
               onChange={(e) => setBuyPrice(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="mdi:currency-inr" />
+                  </InputAdornment>
+                ),
+              }}
               required
             />
           </Grid>
@@ -167,11 +191,18 @@ function MarketCalForm() {
               value={targetPrice}
               sx={{ width: 1 }}
               onChange={(e) => setTargetPrice(e.target.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Iconify icon="mdi:currency-inr" />
+                  </InputAdornment>
+                ),
+              }}
               required
             />
           </Grid>
 
-          {marketcallType !== 'INTRADAY' && !!marketcallType && (
+          {marketcallType !== MARKET_CALL_TYPES_SERVER.INTRADAY && !!marketcallType && (
             <Grid item xs={12} lg={6}>
               <DatePicker
                 label="End Date"
@@ -179,7 +210,7 @@ function MarketCalForm() {
                 value={endDate}
                 minDate={new Date()}
                 onChange={(sd) => setEndDate(sd)}
-                required={marketcallType !== 'INTRADAY'}
+                required={marketcallType !== MARKET_CALL_TYPES_SERVER.INTRADAY}
               />
             </Grid>
           )}

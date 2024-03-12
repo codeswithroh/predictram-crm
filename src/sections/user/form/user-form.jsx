@@ -182,6 +182,7 @@ export default function RegisterView() {
     },
     { label: 'Phone', accessor: 'phone' },
     { label: 'Email', accessor: 'email' },
+    { label: 'Client Type', accessor: 'client_type' },
     { label: 'role', accessor: 'role' },
     { label: 'Password', accessor: 'password' },
   ];

@@ -42,21 +42,23 @@ export default function MarketCallFilter({ setFilter, filter }) {
           />
         </Card>
 
-        <Card sx={{ borderRadius: 1 }}>
-          <Dropdown
-            onChange={(e) => {
-              setFilter({ ...filter, marketState: e.target.value, page: 0 });
-              router.push(`/market-call/${filter.type}/${e.target.value}`);
-            }}
-            value={filter?.marketState}
-            options={[
-              { value: 'live', label: 'Live' },
-              { value: 'ended', label: 'Ended' },
-            ]}
-            label="Choose market state"
-            nolabel
-          />
-        </Card>
+        <AccessControl accepted_roles={[ROLES.ADMIN, ROLES.SUPER_ADMIN, ROLES.EMPLOYEE]}>
+          <Card sx={{ borderRadius: 1 }}>
+            <Dropdown
+              onChange={(e) => {
+                setFilter({ ...filter, marketState: e.target.value, page: 0 });
+                router.push(`/market-call/${filter.type}/${e.target.value}`);
+              }}
+              value={filter?.marketState}
+              options={[
+                { value: 'live', label: 'Live' },
+                { value: 'ended', label: 'Ended' },
+              ]}
+              label="Choose market state"
+              nolabel
+            />
+          </Card>
+        </AccessControl>
       </Grid2>
 
       <Grid2

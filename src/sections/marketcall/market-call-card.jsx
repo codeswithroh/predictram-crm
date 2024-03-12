@@ -13,7 +13,7 @@ import { useRouter } from 'src/routes/hooks';
 import { fDate } from 'src/utils/format-time';
 import { paisaToRupees } from 'src/utils/convert';
 
-import { MARKET_CALL_TYPES } from 'src/enums';
+import { MARKET_CALL_TYPES, MARKET_CALL_TYPES_SERVER } from 'src/enums';
 
 // ----------------------------------------------------------------------
 
@@ -101,7 +101,7 @@ export default function MarketCallCard({ marketCall, buttonText }) {
   const PriceInfo = (
     <Box>
       <Typography>Target Price :- {paisaToRupees(targetPrice)}</Typography>
-      {type === 'INTRADAY' && (
+      {type === MARKET_CALL_TYPES_SERVER.INTRADAY && (
         <Typography>Stop Loss Price :- {paisaToRupees(stopLossPrice)}</Typography>
       )}
     </Box>

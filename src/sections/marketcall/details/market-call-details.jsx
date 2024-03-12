@@ -11,10 +11,10 @@ import { Box, Card, Grid, Stack, Typography } from '@mui/material';
 import { fDate } from 'src/utils/format-time';
 import { paisaToRupees } from 'src/utils/convert';
 
-import { ROLES, MARKET_CALL_TYPES } from 'src/enums';
 import ResponseService from 'src/services/Response.service';
 import MarketdataService from 'src/services/Marketdata.service';
 import MarketcallService from 'src/services/Marketcall.service';
+import { ROLES, RESPONSE_STATUS, MARKET_CALL_TYPES, CLIENT_TYPE_SERVER } from 'src/enums';
 
 import AccessControl from 'src/components/Accesscontrol';
 import FetchLoader from 'src/components/loader/fetch-loader';
@@ -34,7 +34,7 @@ export default function MarketCallDetails() {
   const { id } = useParams();
   const confirm = useConfirm();
   const queryClient = useQueryClient();
-  const { role } = useSelector((state) => state.user.details);
+  const { role, client_type } = useSelector((state) => state.user.details);
 
   const { data: marketCall = {}, isLoading: marketCallLoading } = useQuery({
     queryKey: ['market-call', id],
@@ -74,7 +74,7 @@ export default function MarketCallDetails() {
   });
 
   const { mutate: submitResponse, isPending: responseLoading } = useMutation({
-    mutationFn: ({ response }) => ResponseService.post({ marketCallId: id, response }),
+    mutationFn: (payload) => ResponseService.post({ marketCallId: id, ...payload }),
     onError: (err) => toast.error(err.message),
     onSuccess: () => {
       queryClient.invalidateQueries(['market-call', id]);
@@ -89,8 +89,15 @@ export default function MarketCallDetails() {
         `Yes, ${response}`
       )
     );
+    const payload = {
+      response,
+    };
 
-    submitResponse({ response });
+    if (client_type === CLIENT_TYPE_SERVER.NON_DISCRETIONARY) {
+      payload.status = RESPONSE_STATUS.COMPLETE;
+    }
+
+    submitResponse({ ...payload });
   };
 
   // Components
@@ -141,7 +148,9 @@ export default function MarketCallDetails() {
 
   const renderStockDetails = (
     <Stack gap={1}>
-      <Typography fontWeight="bold">Stock Details In This Call</Typography>
+      <Typography fontWeight="bold" variant="h5">
+        Stock Details In This Call
+      </Typography>
       <Grid container gap={1}>
         <Grid item sx={12} md={3}>
           <TitleValueCart
@@ -195,7 +204,9 @@ export default function MarketCallDetails() {
 
   const renderMarketDetails = (
     <Stack gap={1}>
-      <Typography fontWeight="bold">Market Call Details In This Call</Typography>
+      <Typography fontWeight="bold" variant="h5">
+        Market Call Details In This Call
+      </Typography>
       <Grid container gap={1}>
         <Grid item sx={12} md={5}>
           <TitleValueCart title="Call Type" value={MARKET_CALL_TYPES[marketCall?.type]} />
@@ -223,13 +234,25 @@ export default function MarketCallDetails() {
       {marketCall?.responses?.length > 0 ? (
         <Typography
           variant="h5"
+          border={1}
+          borderRadius={2}
           color={marketCall?.responses[0]?.response === 'ACCEPT' ? 'green' : 'red'}
           align="center"
         >
-          This call is {marketCall?.responses[0]?.response}ED by you
+          THIS CALL IS {marketCall?.responses[0]?.response}ED BY YOU
         </Typography>
       ) : (
         <Stack mt={2} flexGrow={1} gap={2} direction={{ sx: 'column', md: 'row' }}>
+          {client_type === CLIENT_TYPE_SERVER.NON_DISCRETIONARY && (
+            <LoadingButton
+              variant="outlined"
+              color="primary"
+              sx={{ width: '100%' }}
+              onClick={() => window.open('https://www.kotaksecurities.com/#login')}
+            >
+              Open Kotak Securities
+            </LoadingButton>
+          )}
           <LoadingButton
             variant="contained"
             color="success"
@@ -237,7 +260,9 @@ export default function MarketCallDetails() {
             loading={responseLoading}
             onClick={() => handelResponseSubmit('ACCEPT')}
           >
-            Accept
+            {client_type === CLIENT_TYPE_SERVER.DISCRETIONARY
+              ? 'Accept'
+              : 'Mark As Accept ( If you executed this call )'}
           </LoadingButton>
           <LoadingButton
             variant="contained"
@@ -255,13 +280,12 @@ export default function MarketCallDetails() {
 
   if (marketCallLoading) return <FetchLoader />;
   return (
-    <Card sx={{ p: 2, gap: 3, display: 'flex', flexDirection: 'column' }}>
+    <Card sx={{ p: 3, gap: 3, display: 'flex', flexDirection: 'column' }}>
       {marketCall?.image && renderImage}
       <Stack direction={{ md: 'row', sx: 'column' }} justifyContent="space-between" gap={1}>
         {renderDates}
         {renderPublishBy}
       </Stack>
-
       <Grid container gap={1} justifyContent="space-between">
         <Grid sx={12} md={5}>
           {livePriceLoading ? <FetchLoader /> : renderStockDetails}
