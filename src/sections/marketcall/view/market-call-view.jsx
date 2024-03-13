@@ -19,9 +19,10 @@ import MarketCallFilter from './market-call-filter';
 
 export default function BlogView() {
   const router = useRouter();
-  const { marketState, type } = useParams();
+  const { marketState, type, view } = useParams();
   const [filter, setFilter] = useState({
     marketState: marketState || 'live',
+    view: view || '',
     page: 0,
     limit: 5,
     type: type || MARKET_CALL_TYPES_SERVER.INTRADAY,

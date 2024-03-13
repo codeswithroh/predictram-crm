@@ -30,7 +30,7 @@ export default function MarketCallFilter({ setFilter, filter }) {
           <Dropdown
             onChange={(e) => {
               setFilter({ ...filter, type: e.target.value, page: 0 });
-              router.push(`/market-call/${e.target.value}/${filter?.marketState}`);
+              router.push(`/market-call/${e.target.value}/${filter?.marketState}/${filter?.view}`);
             }}
             value={filter?.type}
             options={Object.keys(MARKET_CALL_TYPES).map((key) => ({
@@ -42,12 +42,28 @@ export default function MarketCallFilter({ setFilter, filter }) {
           />
         </Card>
 
+        <AccessControl accepted_roles={[ROLES.CLIENT]}>
+          <Card sx={{ borderRadius: 1, display: 'flex', gap: '0.5rem' }}>
+            <Dropdown
+              onChange={(e) => {
+                router.push(`/market-call/${filter.type}/${filter?.marketState}/${e.target.value}`);
+                setFilter({ ...filter, view: e.target.value, page: 0 });
+              }}
+              value={filter?.view || 'Not Submitted'}
+              options={['Not Submitted', 'Submitted'].map((key) => ({
+                value: key,
+                label: key,
+              }))}
+            />
+          </Card>
+        </AccessControl>
+
         <AccessControl accepted_roles={[ROLES.ADMIN, ROLES.SUPER_ADMIN, ROLES.EMPLOYEE]}>
           <Card sx={{ borderRadius: 1 }}>
             <Dropdown
               onChange={(e) => {
                 setFilter({ ...filter, marketState: e.target.value, page: 0 });
-                router.push(`/market-call/${filter.type}/${e.target.value}`);
+                router.push(`/market-call/${filter.type}/${e.target.value}/${filter?.view}`);
               }}
               value={filter?.marketState}
               options={[

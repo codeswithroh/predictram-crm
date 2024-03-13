@@ -1,4 +1,5 @@
 import toast from 'react-hot-toast';
+import { useSelector } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
 import React, { useState, useEffect } from 'react';
 
@@ -7,6 +8,7 @@ import { Box, Card, TablePagination } from '@mui/material';
 
 import cleanObject from 'src/utils/cleanObject';
 
+import { ROLES, MARKET_CALL_TYPES } from 'src/enums';
 import SocketService from 'src/services/Socket.service';
 import MarketcallService from 'src/services/Marketcall.service';
 
@@ -16,6 +18,7 @@ import FetchLoader from 'src/components/loader/fetch-loader';
 import MarketCallCard from '../market-call-card';
 
 function MarketCallCards({ filter, setFilter }) {
+  const { role } = useSelector((state) => state.user.details);
   const [page, setPage] = useState(filter?.page);
   const [limit, setLimit] = useState(filter?.limit);
 
@@ -28,6 +31,8 @@ function MarketCallCards({ filter, setFilter }) {
         cleanObject({
           ...filter,
           isLive: filter?.marketState === 'live',
+          showSubmitted: filter?.view === 'Submitted',
+          showResponse: role === ROLES.CLIENT,
           populate: 'createdBy',
         })
       );
@@ -61,8 +66,8 @@ function MarketCallCards({ filter, setFilter }) {
     return (
       <NotFound
         sx={{ mt: 10 }}
-        title="Opps! no market call found"
-        subtitle="You will get data once its avilable"
+        title={`Opps! no ${MARKET_CALL_TYPES[filter?.type]} market call found`}
+        subtitle="Check other market call types"
       />
     );
 

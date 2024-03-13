@@ -1,20 +1,27 @@
 import { useState } from 'react';
-import { useParams } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
+import { Link, useParams } from 'react-router-dom';
 
-import { Grid } from '@mui/material';
+import { Box, Grid } from '@mui/material';
 
 import cleanObject from 'src/utils/cleanObject';
 
 import ResponseService from 'src/services/Response.service';
+import { CLIENT_TYPE, RESPONSE_STATUS, CLIENT_TYPE_SERVER } from 'src/enums';
 
+import Iconify from 'src/components/iconify';
 import BaseTable from 'src/components/table/BaseTable';
+import ResponseStatusModal from 'src/components/modal/response/response-status-modal';
 
 import MarketCallResponseFilter from './market-call-response-filter';
 
 function MarketCallResponse() {
   const { id } = useParams();
+  const [modalOpen, setModalOpen] = useState(false);
   const [filter, setFilter] = useState({ page: 0, limit: 5 });
+  const [responseId, setResponseId] = useState('');
+
+  const handleModalClose = () => setModalOpen(false);
 
   const responseTableFormat = [
     {
@@ -34,8 +41,50 @@ function MarketCallResponse() {
       accessor: ({ response }) => response || '-',
     },
     {
-      label: 'Auto Execute',
-      accessor: ({ autoExecute }) => (autoExecute ? 'Yes' : 'No'),
+      label: 'Status',
+      accessor: ({ status }) => status || 'N/A',
+    },
+    {
+      label: 'Client Type',
+      accessor: ({ submittedBy }) => CLIENT_TYPE[submittedBy?.client_type],
+    },
+    {
+      label: 'Execute Trade',
+      accessor: ({ submittedBy, status }) => {
+        if (
+          submittedBy.client_type === CLIENT_TYPE_SERVER.DISCRETIONARY &&
+          status === RESPONSE_STATUS.INITIATED
+        ) {
+          return (
+            <Link to="https://www.kotaksecurities.com/#login" target="blank">
+              <Iconify icon="akar-icons:link-out" />
+            </Link>
+          );
+        }
+        return 'N/A';
+      },
+    },
+    {
+      label: 'Change Status',
+      accessor: ({ submittedBy, status, _id: responseid }) => {
+        if (
+          submittedBy.client_type === CLIENT_TYPE_SERVER.DISCRETIONARY &&
+          status === RESPONSE_STATUS.INITIATED
+        ) {
+          return (
+            <Box
+              sx={{ cursor: 'pointer' }}
+              onClick={() => {
+                setResponseId(responseid);
+                setModalOpen(true);
+              }}
+            >
+              <Iconify icon="fluent-mdl2:sync-status-solid" />
+            </Box>
+          );
+        }
+        return 'N/A';
+      },
     },
   ];
   const { data, isLoading } = useQuery({
@@ -52,6 +101,13 @@ function MarketCallResponse() {
 
   return (
     <Grid container>
+      <ResponseStatusModal
+        handleClose={handleModalClose}
+        open={modalOpen}
+        responseId={responseId}
+        queryKey={['market-call-response', id, filter]}
+      />
+
       <Grid item md={3} xs={12} paddingRight={{ md: 2, xs: 0 }} paddingBottom={{ md: 0, xs: 2 }}>
         <MarketCallResponseFilter setFilter={setFilter} filter={filter} />
       </Grid>

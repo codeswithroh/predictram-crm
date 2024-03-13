@@ -6,14 +6,14 @@ export const roleBasedRoutes = {
     'user',
     'user/add',
     'market-call',
-    'market-call/:type?/:marketState?',
+    'market-call/:type?/:marketState?/:view?',
     'market-call/details/:id/:response?',
   ],
   EMPLOYEE: [
     '',
     'user',
     'market-call',
-    'market-call/:type?/:marketState?',
+    'market-call/:type?/:marketState?/:view?',
     'market-call/details/:id/:response?',
     'market-call/add',
   ],
@@ -22,6 +22,7 @@ export const roleBasedRoutes = {
     'market-call',
     'market-call/:type?/:marketState?',
     'market-call/details/:id/:response?',
+    'market-call/:type?/:marketState?/:view?',
   ],
 };
 

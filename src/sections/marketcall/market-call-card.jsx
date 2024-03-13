@@ -1,5 +1,6 @@
 import { isAfter } from 'date-fns';
 import PropTypes from 'prop-types';
+import { useSelector } from 'react-redux';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -13,7 +14,7 @@ import { useRouter } from 'src/routes/hooks';
 import { fDate } from 'src/utils/format-time';
 import { paisaToRupees } from 'src/utils/convert';
 
-import { MARKET_CALL_TYPES, MARKET_CALL_TYPES_SERVER } from 'src/enums';
+import { ROLES, MARKET_CALL_TYPES, MARKET_CALL_TYPES_SERVER } from 'src/enums';
 
 // ----------------------------------------------------------------------
 
@@ -30,9 +31,13 @@ const convertStocksToTitle = (stockData) => {
 // };
 
 export default function MarketCallCard({ marketCall, buttonText }) {
-  const { endDate, stockData, id, createdBy, image, type, targetPrice, stopLossPrice } = marketCall;
+  const { endDate, stockData, id, createdBy, image, type, targetPrice, stopLossPrice, responses } =
+    marketCall;
   const isLive = isAfter(new Date(endDate), new Date());
+  const { role } = useSelector((state) => state.user?.details);
   const router = useRouter();
+
+  const response = responses?.length > 0 && role === ROLES.CLIENT ? responses[0] : null;
 
   const renderTitle = (
     <Link
@@ -107,6 +112,17 @@ export default function MarketCallCard({ marketCall, buttonText }) {
     </Box>
   );
 
+  const responseDetails = (
+    <Box>
+      {response?.response && (
+        <Typography color={response?.response === 'REJECT' ? 'red' : 'green'}>
+          Your Response : - {response?.response}
+        </Typography>
+      )}
+      {response?.status && <Typography>Current Status : - {response?.status}</Typography>}
+    </Box>
+  );
+
   const renderButton = (
     <Button
       variant="contained"
@@ -142,10 +158,8 @@ export default function MarketCallCard({ marketCall, buttonText }) {
             {CallType}
             {renderCreatedBy}
           </Stack>
-
           {renderTitle}
-          {PriceInfo}
-
+          {response ? responseDetails : PriceInfo}
           {renderButton}
         </Stack>
       </Card>

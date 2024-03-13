@@ -44,7 +44,6 @@ export default function MarketCallDetails() {
         populate: 'createdBy',
         showResponse: role === ROLES.CLIENT,
       });
-      console.log(data);
       return data;
     },
     select: (res) => res?.marketCallData[0],
@@ -93,8 +92,12 @@ export default function MarketCallDetails() {
       response,
     };
 
-    if (client_type === CLIENT_TYPE_SERVER.NON_DISCRETIONARY) {
+    if (client_type === CLIENT_TYPE_SERVER.NON_DISCRETIONARY && response === 'ACCEPT') {
       payload.status = RESPONSE_STATUS.COMPLETE;
+    }
+
+    if (client_type === CLIENT_TYPE_SERVER.DISCRETIONARY && response === 'ACCEPT') {
+      payload.status = RESPONSE_STATUS.INITIATED;
     }
 
     submitResponse({ ...payload });
@@ -232,15 +235,22 @@ export default function MarketCallDetails() {
   const renderSubmitResponse = (
     <AccessControl accepted_roles={[ROLES.CLIENT]}>
       {marketCall?.responses?.length > 0 ? (
-        <Typography
-          variant="h5"
-          border={1}
-          borderRadius={2}
-          color={marketCall?.responses[0]?.response === 'ACCEPT' ? 'green' : 'red'}
-          align="center"
-        >
-          THIS CALL IS {marketCall?.responses[0]?.response}ED BY YOU
-        </Typography>
+        <Stack mt={2} flexGrow={1} gap={2} direction="column">
+          {marketCall?.responses[0]?.status && (
+            <Typography variant="h5" border={1} borderRadius={2} align="center" borderColor="blue">
+              CURRENT STATUS IS {marketCall?.responses[0]?.status}
+            </Typography>
+          )}
+          <Typography
+            variant="h5"
+            border={1}
+            borderRadius={2}
+            color={marketCall?.responses[0]?.response === 'ACCEPT' ? 'green' : 'red'}
+            align="center"
+          >
+            THIS CALL IS {marketCall?.responses[0]?.response}ED BY YOU
+          </Typography>
+        </Stack>
       ) : (
         <Stack mt={2} flexGrow={1} gap={2} direction={{ sx: 'column', md: 'row' }}>
           {client_type === CLIENT_TYPE_SERVER.NON_DISCRETIONARY && (

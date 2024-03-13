@@ -5,15 +5,15 @@ import { Card, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 
 import EnumAutocomplete from 'src/components/AutoComplete/EnumAutoComplete';
-import BolleanAutoComplete from 'src/components/AutoComplete/BooleanAutoComplete';
+import ResponseStatusAutoComplete from 'src/components/AutoComplete/ResonseStatusAutocomplete';
 
 function MarketCallResponseFilter({ setFilter, filter }) {
-  const [autoExecute, setAutoExecute] = useState('');
   const [response, setResponse] = useState('');
+  const [status, setStatus] = useState('');
 
   const onSubmit = (e) => {
     e.preventDefault();
-    setFilter({ ...filter, autoExecute, response, page: 0 });
+    setFilter({ ...filter, response, status, page: 0 });
   };
 
   return (
@@ -23,12 +23,12 @@ function MarketCallResponseFilter({ setFilter, filter }) {
           <Typography variant="h6" marginBottom="10px">
             Filters
           </Typography>
-          <BolleanAutoComplete
-            name="autoExecute"
+          <ResponseStatusAutoComplete
+            name="status"
             noLabel
-            onChange={(_, v) => setAutoExecute(v)}
-            value={autoExecute}
-            placeholder="Select Auto execute"
+            value={status}
+            onChange={(_, v) => setStatus(v)}
+            placeholder="Select Status"
           />
           <EnumAutocomplete
             name="response"
