@@ -22,6 +22,7 @@ export const roleBasedRoutes = {
     'market-call',
     'market-call/:type?/:marketState?',
     'market-call/details/:id/:response?',
+    'responses'
   ],
 };
 

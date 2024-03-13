@@ -27,6 +27,11 @@ const navConfig = [
     path: 'market-call',
     icon: icon('ic_market'),
   },
+  {
+    title: 'Responses',
+    path: 'responses',
+    icon: icon('ic_dashboard'),
+  },
 ];
 
 export default navConfig;
