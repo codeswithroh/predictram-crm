@@ -1,9 +1,20 @@
+import { useState } from 'react';
+
 import { Button, Container,} from '@mui/material';
 
 import PageHeader from 'src/components/pageHeader';
 
+import Nav from '../../../layouts/dashboard/nav';
+import Header from '../../../layouts/dashboard/header';
+
 export default function CGPUPage() {
+  const [openNav, setOpenNav] = useState(false);
   return (
+    <>
+    <Header onOpenNav={() => setOpenNav(true)} />
+
+    <Nav openNav={openNav} onCloseNav={() => setOpenNav(false)} />
+      
     <Container
       sx={{
         mt: 3,
@@ -12,6 +23,7 @@ export default function CGPUPage() {
         padding: '24px',
         borderRadius: '8px',
         position: 'relative',
+        top: '64px',
       }}
     >
 
@@ -26,5 +38,6 @@ export default function CGPUPage() {
         Visit CGPU
       </Button>
     </Container>
+    </>
   );
 }
