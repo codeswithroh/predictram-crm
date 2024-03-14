@@ -28,14 +28,16 @@ export default function ResponseFilter({ setFilter, filter }) {
           <Grid2 sx={{ display: 'flex' }} gap={0.5} alignItems="center">
             <DatePicker
               label="From Date"
-              sx={{ borderRadius: 1, width: '100%' }}
+              slotProps={{ textField: { size: 'small' } }}
+              sx={{ borderRadius: 1, width: '100%', background: 'white' }}
               value={fromDate}
               onChange={(sd) => setFromDate(sd)}
               format="DD - MM - YYYY"
             />
             <DatePicker
               label="To Date"
-              sx={{ borderRadius: 1, width: '100%' }}
+              slotProps={{ textField: { size: 'small' } }}
+              sx={{ borderRadius: 1, width: '100%', background: 'white' }}
               value={toDate}
               minDate={fromDate}
               onChange={(sd) => setToDate(sd)}
@@ -48,52 +50,5 @@ export default function ResponseFilter({ setFilter, filter }) {
         </LocalizationProvider>
       </Grid2>
     </Grid2>
-
-    // <Grid2
-    //   sx={{ mb: 2, width: '100%', height: '5rem' }}
-    //   container
-    //   justifyContent="end"
-    //   alignItems="center"
-    //   gap={3}
-    // >
-    //   <Grid2
-    //     md={6}
-    //     xs={12}
-    //     container
-    //     gap={0.5}
-    //     justifyContent="end"
-    //     alignItems="center"
-    //     component="form"
-    //     onSubmit={onFormSubmit}
-    //     sx={{ width: '100%', height: '100%' }}
-    //   >
-    //     <Grid2 sx={{ display: 'flex' }} gap={0.5}>
-    //       <LocalizationProvider dateAdapter={AdapterDayjs}>
-    //         <Card sx={{ borderRadius: 1 }}>
-    //           <DatePicker
-    //             label="From Date"
-    //             sx={{ width: 1 }}
-    //             value={fromDate}
-    //             onChange={(sd) => setFromDate(sd)}
-    //             format="DD - MM - YYYY"
-    //           />
-    //         </Card>
-    //         <Card sx={{ borderRadius: 1 }}>
-    //           <DatePicker
-    //             label="To Date"
-    //             sx={{ width: 1 }}
-    //             value={toDate}
-    //             minDate={fromDate}
-    //             onChange={(sd) => setToDate(sd)}
-    //             format="DD - MM - YYYY"
-    //           />
-    //         </Card>
-    //       </LocalizationProvider>
-    //       <Button variant="contained" color="inherit" type="submit">
-    //         Filter
-    //       </Button>
-    //     </Grid2>
-    //   </Grid2>
-    // </Grid2>
   );
 }
