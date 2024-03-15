@@ -4,8 +4,7 @@ import { Container } from '@mui/material';
 
 import PageHeader from 'src/components/pageHeader';
 
-import { ResponseCards } from 'src/sections/response/view/response-cards';
-
+import ResponseTable from './response-table';
 import ResponseFilter from './response-filter';
 
 const ResponsePage = () => {
@@ -20,7 +19,7 @@ const ResponsePage = () => {
     <Container sx={{ mt: 3 }}>
       <PageHeader title="Responses" />
       <ResponseFilter filter={filter} setFilter={setFilter} />
-      <ResponseCards filter={filter} setFilter={setFilter} />
+      <ResponseTable filter={filter} setFilter={setFilter} />
     </Container>
   );
 };
