@@ -9,7 +9,7 @@ export const roleBasedRoutes = {
     'market-call/:type?/:marketState?',
     'market-call/details/:id/:response?',
     'cGPU',
-    'hedgeOS'
+    'hedgeOS',
   ],
   EMPLOYEE: [
     '',
@@ -19,7 +19,7 @@ export const roleBasedRoutes = {
     'market-call/details/:id/:response?',
     'market-call/add',
     'cGPU',
-    'hedgeOS'
+    'hedgeOS',
   ],
   CLIENT: [
     '',
@@ -27,7 +27,7 @@ export const roleBasedRoutes = {
     'market-call/:type?/:marketState?',
     'market-call/details/:id/:response?',
     'cGPU',
-    'hedgeOS'
+    'hedgeOS',
   ],
 };
 
