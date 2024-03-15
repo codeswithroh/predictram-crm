@@ -19,6 +19,7 @@ export const Page404 = lazy(() => import('src/pages/page-not-found'));
 export const LoginPage = lazy(() => import('src/pages/auth/login'));
 export const ForgotPasswordPage = lazy(() => import('src/pages/auth/forgot-password'));
 export const ChangePasswordPage = lazy(() => import('src/pages/auth/change-password'));
+export const ClientResponses = lazy(() => import('src/pages/responses'));
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +41,10 @@ export default function Router() {
     {
       path: 'organization/add',
       element: <OrgFormPage />,
+    },
+    {
+      path: 'responses',
+      element: <ClientResponses />,
     },
   ];
   const routes = useRoutes([

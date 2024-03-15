@@ -108,7 +108,7 @@ export default function MarketCallFilter({ setFilter, filter }) {
                 placeholder="Select Employee.."
                 noLabel
                 name="createdBy"
-                labelKey="firstName"
+                labelKey="email"
                 value={createdBy}
                 filter={{
                   role: ROLES.EMPLOYEE,
