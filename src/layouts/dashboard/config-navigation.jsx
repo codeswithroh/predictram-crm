@@ -33,11 +33,6 @@ const navConfig = [
     icon: icon('ic_market'),
   },
   {
-    title: 'Predictram-GePU EcoAnalyzer',
-    path: 'gePUEcoAnalyzer',
-    icon: icon('ic_market'),
-  },
-  {
     title: 'Predictram-cGPU',
     path: 'cGPU',
     icon: icon('ic_market'),

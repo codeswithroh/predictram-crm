@@ -20,9 +20,7 @@ export const LoginPage = lazy(() => import('src/pages/auth/login'));
 export const ForgotPasswordPage = lazy(() => import('src/pages/auth/forgot-password'));
 export const ChangePasswordPage = lazy(() => import('src/pages/auth/change-password'));
 export const HedgeOSPage = lazy(() => import('src/pages/externals/hedgeOS'));
-export const GePUEcoAnalyzerPage = lazy(() => import('src/pages/externals/gePUEcoAnalyzer'));
 export const CGPUPage = lazy(() => import('src/pages/externals/cGPU'));
-
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +43,8 @@ export default function Router() {
       path: 'organization/add',
       element: <OrgFormPage />,
     },
+    { path: 'hedgeOS', element: <HedgeOSPage /> },
+    { path: 'cGPU', element: <CGPUPage /> },
   ];
   const routes = useRoutes([
     {
@@ -73,15 +73,6 @@ export default function Router() {
     {
       path: 'change-password',
       element: <ChangePasswordPage />,
-    },
-    { path: 'hedgeOS', 
-      element: <HedgeOSPage /> 
-    },
-    { path: 'gePUEcoAnalyzer', 
-      element: <GePUEcoAnalyzerPage /> 
-    },
-    { path: 'cGPU', 
-      element: <CGPUPage /> 
     },
     {
       path: '404',
