@@ -30,12 +30,12 @@ const navConfig = [
   {
     title: 'HedgeOS',
     path: 'hedgeOS',
-    icon: icon('ic_market'),
+    icon: icon('ic_rupee'),
   },
   {
     title: 'Predictram-cGPU',
     path: 'cGPU',
-    icon: icon('ic_market'),
+    icon: icon('ic_robot'),
   },
 ];
 
