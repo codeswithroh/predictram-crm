@@ -2,7 +2,6 @@ import { ROLES } from 'src/enums';
 
 export const roleBasedRoutes = {
   ADMIN: [
-    '',
     'user',
     'user/add',
     'market-call',
@@ -12,7 +11,6 @@ export const roleBasedRoutes = {
     'hedgeOS',
   ],
   EMPLOYEE: [
-    '',
     'user',
     'market-call',
     'market-call/:type?/:marketState?/:view?',
@@ -22,7 +20,6 @@ export const roleBasedRoutes = {
     'hedgeOS',
   ],
   CLIENT: [
-    '',
     'market-call',
     'market-call/:type?/:marketState?',
     'market-call/details/:id/:response?',
