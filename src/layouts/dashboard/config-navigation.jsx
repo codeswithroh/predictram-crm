@@ -32,6 +32,16 @@ const navConfig = [
     path: 'responses',
     icon: icon('ic_dashboard'),
   },
+  {
+    title: 'HedgeOS',
+    path: 'hedgeOS',
+    icon: icon('ic_rupee'),
+  },
+  {
+    title: 'Predictram-cGPU',
+    path: 'cGPU',
+    icon: icon('ic_robot'),
+  },
 ];
 
 export default navConfig;

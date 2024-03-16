@@ -20,6 +20,8 @@ export const LoginPage = lazy(() => import('src/pages/auth/login'));
 export const ForgotPasswordPage = lazy(() => import('src/pages/auth/forgot-password'));
 export const ChangePasswordPage = lazy(() => import('src/pages/auth/change-password'));
 export const ClientResponses = lazy(() => import('src/pages/responses'));
+export const HedgeOSPage = lazy(() => import('src/pages/externals/hedgeOS'));
+export const CGPUPage = lazy(() => import('src/pages/externals/cGPU'));
 
 // ----------------------------------------------------------------------
 
@@ -46,6 +48,8 @@ export default function Router() {
       path: 'responses',
       element: <ClientResponses />,
     },
+    { path: 'hedgeOS', element: <HedgeOSPage /> },
+    { path: 'cGPU', element: <CGPUPage /> },
   ];
   const routes = useRoutes([
     {
