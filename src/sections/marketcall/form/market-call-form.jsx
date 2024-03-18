@@ -1,5 +1,5 @@
 import { useState } from 'react';
-// import { isAfter } from 'date-fns';
+import { isAfter } from 'date-fns';
 import toast from 'react-hot-toast';
 import { useConfirm } from 'material-ui-confirm';
 import { useMutation } from '@tanstack/react-query';
@@ -84,24 +84,24 @@ function MarketCalForm() {
     }
 
     // TODO: Uncomment in prod
-    // if (isAfter(data.startDate, convetToMarketCloseTime())) {
-    //   toast.error('Market is closed try between 9:15 AM and 3:30 PM');
-    // } else {
-    await confirm(
-      confirmObj(
-        `Are you sure you want to create this market call ?`,
-        `This call will be live from now and will end on ${fDateTime(data.endDate)}`,
-        `Yes, Create`
-      )
-    );
-    mutate(cleanObject(data));
-    // }
+    if (isAfter(data.startDate, convetToMarketCloseTime())) {
+      toast.error('Market is closed try between 9:15 AM and 3:30 PM');
+    } else {
+      await confirm(
+        confirmObj(
+          `Are you sure you want to create this market call ?`,
+          `This call will be live from now and will end on ${fDateTime(data.endDate)}`,
+          `Yes, Create`
+        )
+      );
+      mutate(cleanObject(data));
+    }
   }
 
   const renderForm = (
     <form onSubmit={onSubmit}>
       <Box sx={{ flexGrow: 1, px: 3, pt: 2, display: 'flex', flexDirection: 'column', gap: 2 }}>
-        <ImageUploader setImage={setImage} />
+        <ImageUploader setImage={setImage} imagePath={image} />
         <Typography fontWeight="bold">Enter Stock Details*</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} lg={6}>

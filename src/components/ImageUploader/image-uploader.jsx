@@ -1,50 +1,52 @@
 import { useState } from 'react';
 import toast from 'react-hot-toast';
-import imageCompression from 'browser-image-compression';
 
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@mui/material';
+
+import ImageService from 'src/services/Image.service';
 
 import Iconify from '../iconify';
 
-function ImageUploader({ setImage }) {
-  const [imagePath, setImagePath] = useState('');
+function ImageUploader({ setImage, imagePath }) {
+  const [uploadPercent, setUploadPercent] = useState(0);
+  const [loading, setLoading] = useState(false);
   const [isHover, setIsHover] = useState(false);
 
-  const compressFile = async (file, options) => {
+  const handelImageChoose = async (e) => {
+    const image = e.target.files[0];
+    if (!image) return;
+    handelDeleteImage(e);
+
+    const totalSize = image.size;
     try {
-      const compressedFile = await imageCompression(file, options);
-      return compressedFile;
+      setLoading(true);
+      const uploadedImageUrl = await ImageService.upload(image, (progress) => {
+        const loadSize = progress?.loadedBytes;
+        const percent = Number((loadSize / totalSize) * 100).toFixed(1);
+        setUploadPercent(percent);
+      });
+
+      setImage(uploadedImageUrl);
     } catch (err) {
-      return toast.error(err.message);
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
+      setUploadPercent(0);
     }
   };
 
-  const handelImageChoose = async (e) => {
-    const reader = new FileReader();
-
-    const image = e.target.files[0];
-    if (!image) return;
-
-    const options = {
-      maxSizeMB: 1,
-      maxWidthOrHeight: 600,
-    };
-
-    const file = await compressFile(image, options);
-
-    reader.onload = async (event) => {
-      setImagePath(event.target.result);
-      // const uploadedImage = await ImageService.upload(image); TODO: Upload To AZURE
-      setImage(event.target.result);
-    };
-
-    reader.readAsDataURL(file);
-  };
-
-  const handelDeleteImage = (e) => {
+  const handelDeleteImage = async (e) => {
     e.preventDefault();
-    setImagePath('');
+    if (imagePath) {
+      try {
+        await ImageService.delete(imagePath);
+        setImage('');
+      } catch (err) {
+        toast.error(err.message);
+      }
+    }
   };
+
   return (
     <Box>
       {!imagePath && (
@@ -61,15 +63,23 @@ function ImageUploader({ setImage }) {
           component="label"
           htmlFor="image-uploader"
         >
-          <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2 }}>
-            <img alt="upload-icon" src="/assets/icons/image_upload.png" />
-            <Typography
-              variant="caption"
-              sx={{ color: 'text.disabled', fontSize: '15px', fontWeight: 'bold' }}
-            >
-              Choose Stock Analysis Image for Market Call
-            </Typography>
-          </Box>
+          {!loading && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2 }}>
+              <img alt="upload-icon" src="/assets/icons/image_upload.png" />
+              <Typography
+                variant="caption"
+                sx={{ color: 'text.disabled', fontSize: '15px', fontWeight: 'bold' }}
+              >
+                Choose Stock Analysis Image for Market Call
+              </Typography>
+            </Box>
+          )}
+          {loading && (
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: 2 }}>
+              <CircularProgress variant="determinate" value={uploadPercent} />
+              <Typography>{uploadPercent}% Uploaded</Typography>
+            </Box>
+          )}
         </Box>
       )}
       {imagePath && (
