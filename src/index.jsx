@@ -32,7 +32,7 @@ root.render(
           <Toaster />
           <HelmetProvider>
             <BrowserRouter>
-              <Suspense>
+              <Suspense fallback={<div>Loading...</div>}>
                 <App />
               </Suspense>
             </BrowserRouter>
