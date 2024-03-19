@@ -30,13 +30,13 @@ export default defineConfig({
     port: 3030,
     proxy: {
       '/v1/api': {
-        target: 'http://localhost:8080',
+        target: 'https://predictram-crm-backend.azurewebsites.net',
         changeOrigin: true,
         secure: false,
         ws: true,
       },
       '/socket.io': {
-        target: 'http://localhost:8080',
+        target: 'https://predictram-crm-backend.azurewebsites.net',
         changeOrigin: true,
         secure: false,
         ws: true,
