@@ -730,10 +730,23 @@
   "resolved" "https://registry.npmjs.org/@types/use-sync-external-store/-/use-sync-external-store-0.0.3.tgz"
   "version" "0.0.3"
 
+"@typescript-eslint/scope-manager@^7.3.1":
+  "integrity" "sha512-fVS6fPxldsKY2nFvyT7IP78UO1/I2huG+AYu5AMjCT9wtl6JFiDnsv4uad4jQ0GTFzcUV5HShVeN96/17bTBag=="
+  "resolved" "https://registry.npmjs.org/@typescript-eslint/scope-manager/-/scope-manager-7.3.1.tgz"
+  "version" "7.3.1"
+  dependencies:
+    "@typescript-eslint/types" "7.3.1"
+    "@typescript-eslint/visitor-keys" "7.3.1"
+
 "@typescript-eslint/types@6.7.4":
   "integrity" "sha512-o9XWK2FLW6eSS/0r/tgjAGsYasLAnOWg7hvZ/dGYSSNjCh+49k5ocPN8OmG5aZcSJ8pclSOyVKP2x03Sj+RrCA=="
   "resolved" "https://registry.npmjs.org/@typescript-eslint/types/-/types-6.7.4.tgz"
   "version" "6.7.4"
+
+"@typescript-eslint/types@7.3.1":
+  "integrity" "sha512-2tUf3uWggBDl4S4183nivWQ2HqceOZh1U4hhu4p1tPiIJoRRXrab7Y+Y0p+dozYwZVvLPRI6r5wKe9kToF9FIw=="
+  "resolved" "https://registry.npmjs.org/@typescript-eslint/types/-/types-7.3.1.tgz"
+  "version" "7.3.1"
 
 "@typescript-eslint/typescript-estree@6.7.4":
   "integrity" "sha512-ty8b5qHKatlNYd9vmpHooQz3Vki3gG+3PchmtsA4TgrZBKWHNjWfkQid7K7xQogBqqc7/BhGazxMD5vr6Ha+iQ=="
@@ -766,6 +779,14 @@
   "version" "6.7.4"
   dependencies:
     "@typescript-eslint/types" "6.7.4"
+    "eslint-visitor-keys" "^3.4.1"
+
+"@typescript-eslint/visitor-keys@7.3.1":
+  "integrity" "sha512-9RMXwQF8knsZvfv9tdi+4D/j7dMG28X/wMJ8Jj6eOHyHWwDW4ngQJcqEczSsqIKKjFiLFr40Mnr7a5ulDD3vmw=="
+  "resolved" "https://registry.npmjs.org/@typescript-eslint/visitor-keys/-/visitor-keys-7.3.1.tgz"
+  "version" "7.3.1"
+  dependencies:
+    "@typescript-eslint/types" "7.3.1"
     "eslint-visitor-keys" "^3.4.1"
 
 "@ungap/structured-clone@^1.2.0":
