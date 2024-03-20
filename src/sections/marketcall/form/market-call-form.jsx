@@ -1,35 +1,34 @@
-import { useState } from 'react';
-import { isAfter } from 'date-fns';
-import toast from 'react-hot-toast';
-import { useConfirm } from 'material-ui-confirm';
 import { useMutation } from '@tanstack/react-query';
+import { useConfirm } from 'material-ui-confirm';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import { LoadingButton } from '@mui/lab';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import {
   Box,
-  Grid,
   Card,
-  Divider,
   Container,
+  Divider,
+  Grid,
+  InputAdornment,
   TextField,
   Typography,
-  InputAdornment,
 } from '@mui/material';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 
 import { useRouter } from 'src/routes/hooks';
 
 import cleanObject from 'src/utils/cleanObject';
-import { fDateTime, convetToMarketCloseTime } from 'src/utils/format-time';
+import { convetToMarketCloseTime, fDateTime } from 'src/utils/format-time';
 
-import MarketcallService from 'src/services/Marketcall.service';
 import { MARKET_CALL_TYPES, MARKET_CALL_TYPES_SERVER } from 'src/enums/index';
+import MarketcallService from 'src/services/Marketcall.service';
 
-import Iconify from 'src/components/iconify';
-import PageHeader from 'src/components/pageHeader';
-import ImageUploader from 'src/components/ImageUploader/image-uploader';
 import EnumAutocomplete from 'src/components/AutoComplete/EnumAutoComplete';
 import MarketCallAutoComplete from 'src/components/AutoComplete/MarketCallAutoComplete';
+import ImageUploader from 'src/components/ImageUploader/image-uploader';
+import Iconify from 'src/components/iconify';
+import PageHeader from 'src/components/pageHeader';
 
 const confirmObj = (title, description, confirmationText) => ({
   title: <h3 style={{ margin: 0 }}>{title}</h3>,
@@ -84,18 +83,18 @@ function MarketCalForm() {
     }
 
     // TODO: Uncomment in prod
-    if (isAfter(data.startDate, convetToMarketCloseTime())) {
-      toast.error('Market is closed try between 9:15 AM and 3:30 PM');
-    } else {
-      await confirm(
-        confirmObj(
-          `Are you sure you want to create this market call ?`,
-          `This call will be live from now and will end on ${fDateTime(data.endDate)}`,
-          `Yes, Create`
-        )
-      );
-      mutate(cleanObject(data));
-    }
+    // if (isAfter(data.startDate, convetToMarketCloseTime())) {
+    //   toast.error('Market is closed try between 9:15 AM and 3:30 PM');
+    // } else {
+    await confirm(
+      confirmObj(
+        `Are you sure you want to create this market call ?`,
+        `This call will be live from now and will end on ${fDateTime(data.endDate)}`,
+        `Yes, Create`
+      )
+    );
+    mutate(cleanObject(data));
+    // }
   }
 
   const renderForm = (
