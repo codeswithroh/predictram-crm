@@ -1,1 +1,1 @@
-/v1/api/*  https://predictram-crm-backend.azurewebsites.net/:splat  200
+/v1/api/*  https://predictram-crm-backend.azurewebsites.net/v1/api/:splat  200
