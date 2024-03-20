@@ -12,6 +12,6 @@
   ## Redirect API calls
   [[redirects]]
     from = "/v1/api/*"
-    to = "https://predictram-crm-backend.azurewebsites.net/:splat"
+    to = "https://predictram-crm-backend.azurewebsites.net"
     status = 200
     force = true
