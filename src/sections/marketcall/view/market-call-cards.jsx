@@ -1,15 +1,13 @@
-import toast from 'react-hot-toast';
-import { useSelector } from 'react-redux';
 import { useQuery } from '@tanstack/react-query';
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
 
-import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 import { Box, Card, TablePagination } from '@mui/material';
+import Grid2 from '@mui/material/Unstable_Grid2/Grid2';
 
 import cleanObject from 'src/utils/cleanObject';
 
-import { ROLES, MARKET_CALL_TYPES } from 'src/enums';
-import SocketService from 'src/services/Socket.service';
+import { MARKET_CALL_TYPES, ROLES } from 'src/enums';
 import MarketcallService from 'src/services/Marketcall.service';
 
 import NotFound from 'src/components/Nofound';
@@ -50,15 +48,15 @@ function MarketCallCards({ filter, setFilter }) {
     setFilter({ ...filter, page: 0, limit: value });
   };
 
-  useEffect(() => {
-    SocketService.connect().catch((e) => toast.error(e.message));
-    SocketService.addEventListener('market-call', (marketCall) => {
-      console.log(marketCall); // TODO: update market call data
-    });
-    return () => {
-      SocketService.disconnect();
-    };
-  }, []);
+  // useEffect(() => {
+  //   SocketService.connect().catch((e) => toast.error(e.message));
+  //   SocketService.addEventListener('market-call', (marketCall) => {
+  //     console.log(marketCall); // TODO: update market call data
+  //   });
+  //   return () => {
+  //     SocketService.disconnect();
+  //   };
+  // }, []);
 
   if (isLoading) return <FetchLoader />;
 

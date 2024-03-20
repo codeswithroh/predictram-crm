@@ -35,12 +35,12 @@ export default defineConfig({
         secure: false,
         ws: true,
       },
-      '/socket.io': {
-        target: 'https://predictram-crm-backend.azurewebsites.net',
-        changeOrigin: true,
-        secure: false,
-        ws: true,
-      },
+      // '/socket.io': {
+      //   target: 'https://predictram-crm-backend.azurewebsites.net',
+      //   changeOrigin: true,
+      //   secure: false,
+      //   ws: true,
+      // },
     },
   },
   preview: {
