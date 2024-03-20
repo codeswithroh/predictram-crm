@@ -3,14 +3,12 @@ import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react-swc';
 import checker from 'vite-plugin-checker';
 
-// ----------------------------------------------------------------------
-
 export default defineConfig({
   plugins: [
     react(),
     checker({
       eslint: {
-        lintCommand: 'eslint "./src/**/*.{js,jsx}"',
+        lintCommand: 'eslint "./src/**/*.{js,jsx,ts,tsx}"',
       },
     }),
   ],
@@ -46,4 +44,10 @@ export default defineConfig({
   preview: {
     port: 3030,
   },
+  // base: '.',
+  // root: 'src',
+  // build: {
+  //   emptyOutDir: true,
+  //   outDir: '../dist',
+  // },
 });
