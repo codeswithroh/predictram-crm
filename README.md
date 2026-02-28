@@ -1,6 +1,6 @@
 ## Minimal [(Free version)](https://minimal-kit-react.vercel.app/)
 
-![license](https://img.shields.io/badge/license-MIT-blue.svg)
+![Gratitude Wall](https://gratitude-wall-production.up.railway.app/projects/codeswithroh/predictram-crm/snapshot.svg)
 
 > Free React Admin Dashboard made with Material-UI components and React.
 
